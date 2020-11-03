@@ -2,9 +2,9 @@
 // load data
 d3.csv("./data/data.csv", function(error, data) {
 	
-	var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+	var margin = {top: 20, right: 20, bottom: 20, left: 20},
+    width = 560 - margin.left - margin.right,
+    height = 560 - margin.top - margin.bottom;
 
 /* 
  * value accessor - returns the value to encode for a given data object.
@@ -17,17 +17,17 @@ d3.csv("./data/data.csv", function(error, data) {
 var xValue = function(d) { return d.sy_dist;}, // data -> value
     xScale = d3.scale.linear().range([0, width]), // value -> display
     xMap = function(d,i) { 
-				return xScale(Math.log10(xValue(d))*Math.cos(d.ra*Math.PI/180) * Math.cos(d.dec*Math.PI / 180));}, // data -> display
-				//return xScale(xValue(d)*Math.cos(i*Math.PI / 720));}, // data -> display
+				//return xScale(Math.log10(xValue(d))*Math.cos(d.ra*Math.PI/180) * Math.cos(d.dec*Math.PI / 180));}, // data -> display
+				return xScale(xValue(d)*Math.sin(d.ra*Math.PI/180) * Math.sin(d.dec*Math.PI / 180 - Math.PI/4));}, // data -> display
     xAxis = d3.svg.axis().scale(xScale).orient("bottom");
 
 // setup y
 var yValue = function(d,i) { return d.sy_dist;}, // data -> value
-    yScale = d3.scale.linear().range([height, 0]), // value -> display
-	//yScale = d3.scale.linear().range([height, 0]), // value -> display
+    
+	yScale = d3.scale.linear().range([height, 0]), // value -> display
     yMap = function(d,i) {
-			//return yScale(yValue(d)*Math.sin(i*Math.PI / 720));},// data -> display
-			return yScale(Math.log10(yValue(d))*Math.cos(d.ra*Math.PI/180) * Math.sin(d.dec*Math.PI / 180));},// data -> display
+			return yScale(-yValue(d)*Math.sin(d.ra*Math.PI/180) * Math.cos(d.dec*Math.PI / 180 - Math.PI/4));},// data -> display
+			//return yScale(Math.log10(yValue(d))*Math.sin(d.ra*Math.PI/180) * Math.cos(d.dec*Math.PI / 180));},// data -> display
     yAxis = d3.svg.axis().scale(yScale).orient("left");
 				;
 
@@ -36,7 +36,8 @@ var cValue = function(d) {return 'red';},//{ return d.Manufacturer;},
     color = d3.scale.category10();
 	
 // add the graph canvas to the body of the webpage
-var svg = d3.select("body").append("svg")
+//var svg = d3.select("#Cosmos1").append("svg")
+var svg = d3.select("#Cosmos1")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
@@ -60,11 +61,11 @@ var tooltip = d3.select("body").append("div")
   //data = data.slice().sort((a, b) => d3.descending(a.sy_dist, b.sy_dist));
 
   // don't want dots overlapping axis, so add in buffer to data domain
-  //xScale.domain([-d3.max(data, xValue)-1, d3.max(data, xValue)+1]);
-  //yScale.domain([-d3.max(data, yValue)-1, d3.max(data, yValue)+1]);
-  xScale.domain([-Math.log10(d3.max(data, xValue))-1, Math.log10(d3.max(data, xValue))+1]);
-  yScale.domain([-Math.log10(d3.max(data, yValue))-1, Math.log10(d3.max(data, yValue))+1]);
-
+  xScale.domain([-d3.max(data, xValue)-1, d3.max(data, xValue)+1]);
+  yScale.domain([-d3.max(data, yValue)-1, d3.max(data, yValue)+1]);
+ // xScale.domain([-Math.log10(d3.max(data, xValue))-1, Math.log10(d3.max(data, xValue))+1]);
+  //yScale.domain([-Math.log10(d3.max(data, yValue))-1, Math.log10(d3.max(data, yValue))+1]);
+  
   // x-axis
   svg.append("g")
       .attr("class", "x axis")
@@ -92,11 +93,11 @@ var tooltip = d3.select("body").append("div")
       .text("Distance");
 
   // draw dots
-  svg.selectAll(".dot")
-      .data(data)
+  var circles = svg.selectAll(".dot");
+     circles.data(data)
     .enter().append("circle")
       .attr("class", "dot")
-      .attr("r", 0.5)
+      .attr("r", function(d){if(d.hostname == 'OGLE-2014-BLG-0124L'){console.log(xMap(d));console.log(yMap(d));console.log(d.pl_name);console.log(d.sy_dist);console.log(d.ra);console.log(d.dec);return 25;}else{return 0.5;}})
       .attr("cx", xMap)
       .attr("cy", yMap)
       .style("fill", function(d) { return color(cValue(d));}) ;
@@ -114,7 +115,18 @@ var tooltip = d3.select("body").append("div")
                .duration(500)
                .style("opacity", 0);
       });*/
+	var fisheye = d3.fisheye().radi;
 
+	svg.on("mousemove", function() {
+		fisheye.center(d3.mouse(this));
+		circles.each(function(d) { d.fisheye = fisheye(d); })
+            .attr("cx", function(d) { return d.fisheye.x; })
+            .attr("cy", function(d) { return d.fisheye.y; })
+            .attr("r", function(d) { return 2; });
+	});
+	
+	
+    
   // draw legend
   var legend = svg.selectAll(".legend")
       .data(color.domain())
