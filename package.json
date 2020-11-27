@@ -1,0 +1,31 @@
+{
+  "name": "cosmos",
+  "version": "1.0.0",
+  "description": "Cosmos Visualization for everyone",
+  "main": "index.html",
+  "dependencies": {
+    "lite-server": "^2.6.1"
+  },
+  "devDependencies": {
+    "concurrently": "^5.3.0",
+    "node-sass": "^5.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"npm run watch\" \"npm run start\"",
+    "watch": "node-sass --watch --output-style compressed -o assets/css assets/scss",
+    "build": "node-sass --output-style compressed -o assets/css src/scss",
+    "lite": "lite-server",
+    "start": "npm run lite"
+    },
+   "repository": {
+     "type": "git",
+     "url": "git+https://github.com/hebahigazy/Cosmos.git"
+  },
+  "author": "Heba Zahran",
+  "license": "ISC",
+   "bugs": {
+     "url": "https://github.com/hebahigazy/Cosmos/issues"
+  },
+   "homepage": "https://github.com/hebahigazy/Cosmos#readme"
+}
