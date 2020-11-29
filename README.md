@@ -1,2 +1,2 @@
 # Cosmos
-Cosmos Visualization for everyone
+Cosmos Visualization for everyone... enjoy it
