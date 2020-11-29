@@ -30,12 +30,11 @@
   <!-- Nucleo Icons -->
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <!-- CSS Files -->
-  <link href="../assets/css/black-dashboard.css?v=1.0.0" rel="stylesheet" />
+  <link href="./assets/css/black-dashboard.css?v=1.0.0" rel="stylesheet" />
 
   <!-- d3 links -->
-  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://d3js.org/d3.v3.min.js"></script>
   <script src="./assets/js/cosmos.js"></script>
-  <script src="./assets/js/nply.js"></script>
 
 <style>
   p{
@@ -52,37 +51,37 @@
         <a href="#" class="simple-text logo-mini">
           SI
         </a>
-        <a href="../index.html" class="simple-text logo-normal">
+        <a href="./index.html" class="simple-text logo-normal">
           Space Invaders
         </a>
       </div>
       <ul class="nav">
         <li class="active ">
-          <a href="../index.html">
+          <a href="./index.html">
             <!-- <i class="tim-icons icon-chart-pie-36"></i> -->
             <p >Home</p>
           </a>
         </li>
         <li>
-          <a href="../vis1.html">
+          <a href="vis1.html">
             <!-- <i class="tim-icons icon-atom"></i> -->
             <p>Cosmos</p>
           </a>
         </li>
         <li>
-          <a href="../vis2.html">
+          <a href="./pages/vis2.html">
             <!-- <i class="tim-icons icon-pin"></i> -->
             <p>space Distances</p>
           </a>
         </li>
         <li>
-          <a href="../pages/vis3.html">
+          <a href="./pages/vis3.html">
             <!-- <i class="tim-icons icon-bell-55"></i> -->
             <p>Planetary systems</p>
           </a>
         </li>
         <li>
-          <a href="../pages/info.html">
+          <a href="./pages/info.html">
             <!-- <i class="tim-icons icon-single-02"></i> -->
             <p>Explorations</p>
           </a>
@@ -110,115 +109,42 @@
           </button>
         </div>
       </nav>
-
       <!-- End Navbar -->
       <div class="content">
-        <div class ="row d-flex flex-row-reverse">
-          <div class="col-lg-2 col-md-12 col-md-12">
-            <div class="card" >
-              <div class="card-body ">
-                <form>
-                  <div class="form-group">
-                    <label for="exampleFormControlSelect1">Exploration Method</label>
-                    <select class="form-control" id="method">
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleFormControlSelect2">Planets in systems</label>
-                    <select multiple class="form-control" id="planet-num">
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                      <option>6</option>
-                      <option>7</option>
-                      <option>8</option>
-                    </select>
-                  </div>
-                  <a class="btn btn-primary" onclick="animation()" role="button">Go</a>
-                </form>
-              </div>
-            </div>
-            <div class="card">
-              <h4 class="card-title">Exoplanet Exploration </h4>
-              <div class="embed-responsive embed-responsive-16by9">
-                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/WkWsJWOWTBE" allowfullscreen></iframe>
-              </div>
-              <div class="card-body  pr-5">
-                <h4 class="card-title">5 Ways to Find a Planet</h4>
-                <p class="card-text">
-                  To find a planet, scientists need to get data from telescopes, 
-                  whether those telescopes are in space or on the ground. 
-                  But telescopes don't capture photos of planets with nametags. 
-                  Instead, ...
-                </p>
-                <a href="https://exoplanets.nasa.gov/alien-worlds/ways-to-find-a-planet/" class="btn btn-primary" target="_blank">More Information</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-10 col-md-12 col-md-12">
-            <div class=" row">
-              <div class="col-lg-6 col-md-12 col-sm-12">
-                <!-- left vis -->
-                <div class="card" style="min-height:90vh;" id="area">
-                  <div class="card-header ">
-                      <div class="col-sm-6 text-left">
-                        <h2 class="card-title">Cosmos Map</h2>
-                      </div>
-                      <div class="col-sm-6">
-                          <p class="card-title">Explore where our neigbohrs planets in the milkyway and see how the map was getting built along the time</p>
-                      </div>
-                  </div>
-                  <div class="card-body">
-                      <svg id="SvgScatter"></svg>
-                      <!-- <svg class="col-xs-12 col-lg-6" id="Cosmos1"></svg> -->
-                  </div>
-                </div>
-                <!--end of left vis-->
-              </div>
-              <div class="col-lg-6 col-md-12 col-sm-12">
-                <div class="row">
-                <!-- vis 1/2 width --> 
-                <div class="card mb-3" style="min-height:44vh;">
-                  <div class="card-header ">
-                    <h6 class="title d-inline">Discovery Methods</h6>
-                  </div>
-                  <div class="card-body ">
-                    <div class="chart-area">
-                      <svg id="SvgBars"></svg>
+        <div class ="row">
+            <div class="col-lg-4 col-md-12 col-sm-12">
+              <!-- left  -->
+              <div class="card" style="min-height:90vh;" id="area">
+                <div class="card-header ">
+                    <div class="col-sm-6 text-left">
+                      <h2 class="card-title">Team</h2>
                     </div>
-                  </div>
-                </div>
-                <!-- end of vis 1/2 width --> 
-
-                </div>
-                <div class="row">
-                <!-- vis 1/2 width --> 
-                <div class="card" style="min-height:44vh;">
-                  <div class="card-header ">
-                    <h6 class="title d-inline">History of exoplanets discovering</h6>
-                  </div>
-                  <div class="card-body ">
-                    <div class="chart-area">
-                      <svg id="SvgLines"></svg>
+                    <div class="col-sm-6">
+                        <p class="card-title">desription</p>
                     </div>
-                  </div>
                 </div>
-                <!-- end of vis 1/2 width --> 
-
+                <div class="card-body">
                 </div>
               </div>
+              <!--end of left -->
             </div>
-          </div>
+            <div class="col-lg-8 col-md-12 col-sm-12">
+              <div class="">
+              <div class="card" style="min-height:90vh;">
+                <div class="card-header ">
+                  <h6 class="title d-inline">Project</h6>
+                </div>
+                <div class="card-body ">
+                  <div class="chart-area">
+                      decription
+                  </div>
+                </div>
+              </div>
+              <!-- end of vis 1/2 width -->
+              </div>
+            </div>
         </div>
       </div>
-      
       <footer class="footer">
         <div class="container-fluid">
           <div class="copyright">

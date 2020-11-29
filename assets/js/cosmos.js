@@ -69,7 +69,7 @@
 			d.year = +d.disc_pubdate.substr(0,4) ;
 			d.month = +d.disc_pubdate.substr(5,2); 
 			d.qym = d.year*12 + d.month; 
-			if(d.qym <> lastQyM)
+			if(d.qym != lastQyM)
 			{
 				countInQYm = 0;
 				lastQyM = d.qym;
@@ -77,7 +77,17 @@
 			countInQYm += 1;
 			d.filterTime = countInQYm;
 		  });
-
+		
+		dataScatter.sort((a,b) => a.qym - b.qym);
+		dataScatter.forEach(function(d) {
+			if(d.qym != lastQyM)
+			{
+				countInQYm = 0;
+				lastQyM = d.qym;
+			}
+			countInQYm += 1;
+			d.filterTime = countInQYm;
+		  });
 
 		// Fixing domains based on data
 		xScaleScatter.domain([d3.min(dataScatter, xValueScatter), d3.max(dataScatter, xValueScatter)]);
@@ -113,8 +123,9 @@
 	  var circles = svgScatter.selectAll(".dot");
 		 circles.data(dataScatter)
 		.enter().append("circle")
-			.attr("class",d=> "dot " + d.rowid)
-			.attr("r", 0.5)
+			.attr("class",d=> "dot " + d.rowid + " " + "dot" + nameDMDeleteSpace(d.discoverymethod))
+			.attr("r", 2)
+			.style("stroke", "black")
 		  //.attr("r", function(d){if(d.hostname == 'OGLE-2014-BLG-0124L'){console.log(xMap(d));console.log(yMap(d));console.log(d.pl_name);console.log(d.sy_dist);console.log(d.ra);console.log(d.dec);return 25;}else{return 0.5;}})
 			.attr("cx", xMap)
 			.attr("cy", yMap)
