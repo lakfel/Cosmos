@@ -33,8 +33,9 @@
   <link href="../assets/css/black-dashboard.css?v=1.0.0" rel="stylesheet" />
 
   <!-- d3 links -->
-  <script src="https://d3js.org/d3.v3.min.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="./assets/js/cosmos.js"></script>
+  <script src="./assets/js/nply.js"></script>
 
 <style>
   p{
@@ -140,7 +141,7 @@
                       <option>8</option>
                     </select>
                   </div>
-                  <a class="btn btn-primary" href="#" role="button">Go</a>
+                  <a class="btn btn-primary" onclick="animation()" role="button">Go</a>
                 </form>
               </div>
             </div>
@@ -175,7 +176,7 @@
                       </div>
                   </div>
                   <div class="card-body">
-                      <svg id="Cosmos1"></svg>
+                      <svg id="SvgScatter"></svg>
                       <!-- <svg class="col-xs-12 col-lg-6" id="Cosmos1"></svg> -->
                   </div>
                 </div>
@@ -190,7 +191,7 @@
                   </div>
                   <div class="card-body ">
                     <div class="chart-area">
-                        vis here
+                      <svg id="SvgBars"></svg>
                     </div>
                   </div>
                 </div>
@@ -205,7 +206,7 @@
                   </div>
                   <div class="card-body ">
                     <div class="chart-area">
-                        vis here
+                      <svg id="SvgLines"></svg>
                     </div>
                   </div>
                 </div>
