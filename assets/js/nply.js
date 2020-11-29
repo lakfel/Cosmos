@@ -10,10 +10,10 @@
 				
 		svgScatter.selectAll('.dot')
 				.attr('r', 0.1)
-				.style('opacity', 0.2);
+				.style('opacity', 0.05);
 				
 		svgScatter.selectAll('.dot' + nameDMDeleteSpace(d.method))
-				.attr('r', 3.5)
+				.attr('r',5)
 				.style('opacity', 1);
 		
 	}
@@ -130,6 +130,8 @@
 				.style('fill', 'white')
 				.style('text-anchor', 'start')
 				.html(d => d.method + '(' + d.value + ')')
+				.on('mouseover', handleMouseOverBar)
+				.on('mouseout', handleMouseOutBar)
 				.transition()
 					.duration(tickDuration)
 					.ease(d3.easeLinear)
@@ -462,7 +464,9 @@
 			.attr('y', d => yScaleBars(d.rank)+5+((yScaleBars(1)-yScaleBars(0))/2)+1)
 			.style('text-anchor', 'start')
 			.style('fill', 'white')
-			.html(d => d.method + '(' + d.value + ')');
+			.html(d => d.method + '(' + d.value + ')')
+			.on('mouseover', handleMouseOverBar)
+			.on('mouseout', handleMouseOutBar);
       
 		/*svgBar.selectAll('text.valueLabel')
 			//.data(yearSlice, d => d.name)
