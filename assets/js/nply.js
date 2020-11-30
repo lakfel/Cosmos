@@ -1,5 +1,5 @@
 //----------------------------------------------------------- Common --------------------------------------------------------------------------------//
-	var onMethodFilter = false;
+	var limitsScatter = {minX:0,maxX:0,minY:0,maxY:0, topMaxX:0, topMinX:0, topMaxY:0, topMinY:0};
 	
 	var handleMouseOverBar = function(d, i)
 	{	
@@ -26,7 +26,61 @@
 				.style('opacity', 1);
 	}
 	
-	
+	var onWheel = function(d)
+	{
+		d3.event.preventDefault();
+		d3.event.stopPropagation();
+		var center = d3.mouse(this);
+		var px = xScaleScatter.invert(center[0]);
+		var py = yScaleScatter.invert(center[1]);
+		
+		var distance = d3.min([Math.abs(limitsScatter.minX - px),Math.abs(limitsScatter.maxX - px),Math.abs(limitsScatter.minY - py),Math.abs(limitsScatter.maxY - py)]);
+		var direction = d3.event.wheelDelta < 0 ? 'down' : 'up';
+        if(d3.event.wheelDelta > 0)    
+		{
+			limitsScatter.minX = px - distance/2;
+			limitsScatter.maxX = px + distance/2;
+			limitsScatter.minY = py - distance/2;
+			limitsScatter.maxY = py + distance/2;
+			
+			/*limitsScatter.minX = (limitsScatter.minX - px)/2;
+			limitsScatter.maxX = (limitsScatter.maxX - px)/2;
+			limitsScatter.minY = (limitsScatter.minY - py)/2;
+			limitsScatter.maxY = (limitsScatter.maxY - py)/2;*/
+		}
+		else
+		{
+			limitsScatter.minX = d3.max([(limitsScatter.minX + limitsScatter.topMinX)/2,limitsScatter.topMinX]);
+			limitsScatter.maxX = d3.min([(limitsScatter.maxX + limitsScatter.topMaxX)/2,limitsScatter.topMaxX]);
+			limitsScatter.minY = d3.max([(limitsScatter.minY + limitsScatter.topMinY)/2,limitsScatter.topMinY]);
+			limitsScatter.maxY = d3.min([(limitsScatter.maxY + limitsScatter.topMaxY)/2,limitsScatter.topMaxY]);
+		}
+			
+			//zoom(direction === 'up' ? d : d.parent);
+		
+		/*
+		limitsScatter.minX += distance;
+		limitsScatter.maxX -= distance;
+		limitsScatter.minY += distance;
+		limitsScatter.maxY -= distance;*/
+		
+		xScaleScatter.domain([limitsScatter.minX, limitsScatter.maxX]);
+		yScaleScatter.domain([limitsScatter.minY, limitsScatter.maxY]);
+			
+		let dots = svgScatter.selectAll('.dot');
+
+		svgScatter.select('.xAxisScatter')
+			.attr("transform", "translate(0," + yScaleScatter(0) + ")")
+			.call(xAxisScatter);
+			
+		svgScatter.select('.yAxisScatter')
+			.attr("transform", "translate(" + xScaleScatter(0) + ",0)")
+			.call(yAxisScatter);
+		dots			
+			.attr("cx", xMap)
+			.attr("cy", yMap);
+		
+	}
 	
 	
 	var nameDMInsertSpace = function (name)
@@ -277,8 +331,15 @@
 			}
 			counter +=1;
 			planetsData = dataScatter.filter(d => (d.qym < year*12 + month) || (d.qym == year*12 + month && d.filterTime <= counter*10));
-			xScaleScatter.domain([d3.min(planetsData, xValueScatter), d3.max(planetsData, xValueScatter)]);
-			yScaleScatter.domain([d3.min(planetsData, yValueScatter), d3.max(planetsData, yValueScatter)]);
+			
+				
+			limitsScatter.minX = d3.min(planetsData, xValueScatter);
+			limitsScatter.minY = d3.min(planetsData, yValueScatter);
+			limitsScatter.maxX = d3.max(planetsData, xValueScatter);
+			limitsScatter.maxY = d3.max(planetsData, yValueScatter);
+			
+			xScaleScatter.domain([limitsScatter.topMinX, limitsScatter.topMaxX]);
+			yScaleScatter.domain([limitsScatter.topMinY, limitsScatter.topMaxY]);
 			
 
 			svgScatter.select('.xAxisScatter')
@@ -299,7 +360,7 @@
 			dots
 				.enter()
 				.append('circle')
-				.attr('class', d => 'dot '+ d.rowid + " " + "dot" + d.discoverymethod)
+				.attr('class', d => 'dot '+ d.rowid + " " + "dot" + nameDMDeleteSpace(d.discoverymethod))
 				.attr("r", 20)
 				.attr("cx", xMap)
 				.attr("cy", yMap)

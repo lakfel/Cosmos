@@ -22,7 +22,9 @@
 		xMap = function(d,i) { 
 					return xScaleScatter(xValueScatter(d));}, 
 		xAxisScatter = d3.axisTop().scale(xScaleScatter);
-	
+		
+		
+		
 
 	// -------- Axis Y
 	// Function that calculates the Y position in the chart based on distance and angles of measurements
@@ -56,6 +58,7 @@
 		svgScatter = d3.select("#SvgScatter")
 			.attr("width", widthScatter + marginScatter.left + marginScatter.right)
 			.attr("height", heightScatter + marginScatter.top + marginScatter.bottom)
+			.on("wheel", onWheel)
 		  .append("g")
 			.attr("transform", "translate(" + marginScatter.left + "," + marginScatter.top + ")");
 
@@ -90,8 +93,21 @@
 		  });
 
 		// Fixing domains based on data
-		xScaleScatter.domain([d3.min(dataScatter, xValueScatter), d3.max(dataScatter, xValueScatter)]);
-		yScaleScatter.domain([d3.min(dataScatter, yValueScatter), d3.max(dataScatter, yValueScatter)]);
+		
+		limitsScatter.minX = d3.min(dataScatter, xValueScatter);
+		limitsScatter.topMinX = limitsScatter.minX;
+		
+		limitsScatter.minY = d3.min(dataScatter, yValueScatter);
+		limitsScatter.topMinY = limitsScatter.minY;
+		
+		limitsScatter.maxX = d3.max(dataScatter, xValueScatter);
+		limitsScatter.topMaxX = limitsScatter.maxX;
+		
+		limitsScatter.maxY = d3.max(dataScatter, yValueScatter);
+		limitsScatter.topMaxY = limitsScatter.maxY;
+		
+		xScaleScatter.domain([limitsScatter.topMinX, limitsScatter.topMaxX]);
+		yScaleScatter.domain([limitsScatter.topMinY, limitsScatter.topMaxY]);
 	  
 		// x-axis
 		svgScatter.append("g")
