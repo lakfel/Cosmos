@@ -338,8 +338,8 @@
 			limitsScatter.maxX = d3.max(planetsData, xValueScatter);
 			limitsScatter.maxY = d3.max(planetsData, yValueScatter);
 			
-			xScaleScatter.domain([limitsScatter.topMinX, limitsScatter.topMaxX]);
-			yScaleScatter.domain([limitsScatter.topMinY, limitsScatter.topMaxY]);
+			xScaleScatter.domain([limitsScatter.minX, limitsScatter.maxX]);
+			yScaleScatter.domain([limitsScatter.minY, limitsScatter.maxY]);
 			
 
 			svgScatter.select('.xAxisScatter')
