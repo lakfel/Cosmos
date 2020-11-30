@@ -1,6 +1,142 @@
 //----------------------------------------------------------- Common --------------------------------------------------------------------------------//
 	var limitsScatter = {minX:0,maxX:0,minY:0,maxY:0, topMaxX:0, topMinX:0, topMaxY:0, topMinY:0};
-	
+	var planetTooltip = d3.select("#infoCardScatter");
+	var methodTooltip = d3.select("#infoCardBars");
+	var exploringSvgScatter = false;
+
+	var dragginToolTip = false;
+	var deltaXtt = 0;
+	var deltaYtt = 0;
+
+	var closeTooltipPlanet = function()
+	{
+		planetTooltip
+			.style('visibility','hidden')
+			.style("opacity", 0);
+		methodTooltip
+			.style('visibility','hidden')
+			.style("opacity", 0);
+		dragginToolTip = false;
+	}
+
+	var handleMouseDownToolTip = function()
+	{
+		dragginToolTip = true;
+		var tt = planetTooltip;
+		var px = d3.mouse(svgScatter.node())[0];
+		var py = d3.mouse(svgScatter.node())[1];
+		//deltaXtt = px - parseFloat(tt.style('left').substr(0,tt.style('left').length - 2)) ;
+		//deltaXtt = px - parseFloat(tt.style('top').substr(0,tt.style('top').length - 2)) ;
+		deltaXtt = px - parseFloat(planetTooltip.style('left').replaceAll('px','')) ;
+		deltaYtt = py - parseFloat(planetTooltip.style('top').replaceAll('px','')) ;
+
+	}
+	var handleMouseUpToolTip = function()
+	{
+		dragginToolTip = false;
+	}
+	var handleMouseOverToolTip = function()
+	{
+		if(dragginToolTip)
+		{
+			var tt = planetTooltip;
+			var px = d3.mouse(svgScatter.node())[0];
+			var py = d3.mouse(svgScatter.node())[1];
+			planetTooltip.style('left', (px - deltaXtt) + 'px');
+			planetTooltip.style('top', (py - deltaYtt) + 'px');
+
+		} 
+	}
+
+	var handleClickDot = function(d,i)
+	{
+		
+		planetTooltip
+				//.style('left',(d3.mouse(this)[0] ) + 'px')
+				//.style('top',(d3.mouse(this)[1] ) + 'px' )
+				.on('mousedown' , handleMouseDownToolTip)
+				.on('mouseover' , handleMouseOverToolTip)
+				.on('mouseup' , handleMouseUpToolTip)
+				.style('visibility','visible')
+				.style("border-color", "white")
+				.style("border", "solid")
+				.style("border-width", "4px")
+				.style("border-radius", "5px")
+				.style('left',(d3.select(this).attr('cx') +250 ) + 'px')
+				.style('top',(d3.select(this).attr('cy') + 250 ) + 'px' )
+				.style('opacity', 1);
+		planetTooltip
+				.select('#lblPlanetName').html(d.pl_name);
+		planetTooltip
+				.select('#txtPlanetSize').html('<u>Size:</u> ' +  d.pl_rade + ' times the size of earth');
+		planetTooltip
+				.select('#txtPlanetMass').html('<u>Mass:</u> ' +  d.pl_bmasse + ' times the mass of earth');
+		planetTooltip
+				.select('#txtDistanceSystem').html('<u>Distance from earth :</u> ' + d.sy_dist + ' parsecs');
+		planetTooltip
+				.select('#txtHostStar').html('<u>Star :</u> ' + d.hostname);
+		planetTooltip
+				.select('#txtNumberorPlanets').html('<u>No of planets in the system:</u> ' + d.sy_pnum);
+		planetTooltip
+				.select('#txtStarMass').html('<u>Mass:</u> ' + d.st_mass + ' times sun mass');
+		planetTooltip
+				.select('#txtStarSize').html('<u>Size: ' + d.st_rad + ' times sun size');
+		planetTooltip
+				.select('#txtDateDiscovery').html('<u>Discovery date: </u>' + d.disc_pubdate);
+		planetTooltip
+				.select('#txtMethodDiscovery')
+				.html('<u>Discovery method:</u> ' + d.discoverymethod)
+				.style('background-color',colors(nameDMDeleteSpace(d.discoverymethod)));
+				//.style("position", "absolute")
+				//.style('display','');
+	}
+	var handleClickBar = function(d,i)
+	{
+		
+		methodTooltip = d3.select("#infoCardBars");
+		methodTooltip
+				.style('visibility','visible')
+				.style("border-color", "white")
+				.style("border", "solid")
+				.style("border-width", "4px")
+				.style("border-radius", "5px")
+				.style('left','150px')
+				.style('top','50px')
+				.style('opacity', 1);
+		methodTooltip
+				.select('#imgMethod')
+				.attr('src','./assets/img/' + nameDMDeleteSpace(d.method) + '.jpg');
+		methodTooltip
+				.select('#urlDiscoveryMethod').html('....');
+	}
+	var handleMouseMoveInSvgScatter = function()
+	{
+		//if(!exploringSvgScatter) return;
+		let mx = d3.mouse(this)[0];
+		let my = d3.mouse(this)[1];
+		svgScatter.selectAll('.dot')
+			.transition()
+			.duration(100)
+			.ease(d3.easeLinear)
+			.attr('r', function(d)
+					{
+						if(Math.pow(xMap(d)- mx,  2) + Math.pow(yMap(d) - my, 2) <= 2500)
+							return 8;
+						else
+							return 2;
+						
+					}
+			);
+	}
+	var handleMouseOverSvgScatter = function()
+	{
+		exploringSvgScatter = true;
+	}
+	var handleMouseMoveOutSvgScatter = function()
+	{
+		exploringSvgScatter = false;
+	}
+
 	var handleMouseOverBar = function(d, i)
 	{	
 		svgBar.selectAll('.bar')
@@ -19,8 +155,40 @@
 	}
 	var handleMouseOutBar = function(d, i)
 	{	
+	
 		svgBar.selectAll('.bar')
 				.style('opacity', 1);
+	
+				
+		svgScatter.selectAll('.dot')
+				.attr('r',2)
+				.style('opacity', 1);
+				
+	}
+	
+	var handleMouseOverDot = function(d, i)
+	{	
+		planetTooltip = d3.select("#infoCardScatter");
+		svgBar.selectAll('.bar')
+				.style('opacity', 0.2);
+		svgBar.selectAll('.bar'+nameDMDeleteSpace(d.discoverymethod))
+				.style('opacity', 1);
+
+
+		svgScatter.selectAll('.dot')
+				.style('opacity', 0.2);
+		d3.select(this)
+				.attr('r', 5)
+				.style('opacity', 1);
+				
+		
+	}
+	var handleMouseOutDot = function(d, i)
+	{	
+		planetTooltip = d3.select("#infoCardScatter");
+		svgBar.selectAll('.bar')
+				.style('opacity', 1);
+
 		svgScatter.selectAll('.dot')
 				.attr('r', 2)
 				.style('opacity', 1);
@@ -28,6 +196,7 @@
 	
 	var onWheel = function(d)
 	{
+	
 		d3.event.preventDefault();
 		d3.event.stopPropagation();
 		var center = d3.mouse(this);
@@ -146,6 +315,7 @@
 				.attr('height', yScaleBars(1)-yScaleBars(0)-barPadding)
 				.on('mouseover', handleMouseOverBar)
 				.on('mouseout', handleMouseOutBar)
+				.on('click', handleClickBar)
 				.style('fill', d => d.colour)
 				.transition()
 				  .duration(tickDuration)
@@ -366,6 +536,9 @@
 				.attr("cy", yMap)
 				.style("stroke", "white")
 				.style("fill", d => colors(nameDMDeleteSpace(d.discoverymethod) ))
+				.on('mouseover', handleMouseOverDot)
+				.on('mouseout', handleMouseOutDot)
+				.on('click', handleClickDot)
 				.transition()
 				  .duration(tickDuration)
 				  .ease(d3.easeLinear)
@@ -518,7 +691,8 @@
 			.attr('height', yScaleBars(1)-yScaleBars(0)-barPadding)
 			.style('fill', d => d.colour)
 			.on('mouseover', handleMouseOverBar)
-			.on('mouseout', handleMouseOutBar);
+			.on('mouseout', handleMouseOutBar)
+			.on('click', handleClickBar);
       
 		svgBar.selectAll('text.label')
 			//.data(yearSlice, d => d.name)

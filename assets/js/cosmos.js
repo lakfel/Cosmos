@@ -59,6 +59,9 @@
 			.attr("width", widthScatter + marginScatter.left + marginScatter.right)
 			.attr("height", heightScatter + marginScatter.top + marginScatter.bottom)
 			.on("wheel", onWheel)
+			.on("mouseover",handleMouseMoveInSvgScatter)
+			//.on("mouseover",handleMouseOverSvgScatter)
+			//.on("mouseout",handleMouseMoveOutSvgScatter)
 		  .append("g")
 			.attr("transform", "translate(" + marginScatter.left + "," + marginScatter.top + ")");
 
@@ -145,7 +148,10 @@
 		  //.attr("r", function(d){if(d.hostname == 'OGLE-2014-BLG-0124L'){console.log(xMap(d));console.log(yMap(d));console.log(d.pl_name);console.log(d.sy_dist);console.log(d.ra);console.log(d.dec);return 25;}else{return 0.5;}})
 			.attr("cx", xMap)
 			.attr("cy", yMap)
-			.style("fill", d => colors(nameDMDeleteSpace(d.discoverymethod) ));// function(d) { return color(cValue(d));}) ;
+			.style("fill", d => colors(nameDMDeleteSpace(d.discoverymethod) ))		
+			.on('click', handleClickDot)
+			.on('mouseover', handleMouseOverDot)
+			.on('mouseout', handleMouseOutDot);// function(d) { return color(cValue(d));}) ;
 		 /* .on("mouseover", function(d) {
 			  tooltip.transition()
 				   .duration(200)
