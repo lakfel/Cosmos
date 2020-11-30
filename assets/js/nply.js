@@ -38,10 +38,10 @@
 		var direction = d3.event.wheelDelta < 0 ? 'down' : 'up';
         if(d3.event.wheelDelta > 0)    
 		{
-			limitsScatter.minX = px - distance/2;
-			limitsScatter.maxX = px + distance/2;
-			limitsScatter.minY = py - distance/2;
-			limitsScatter.maxY = py + distance/2;
+			limitsScatter.minX = (px + limitsScatter.minX)/2;
+			limitsScatter.maxX = (px + limitsScatter.maxX)/2;
+			limitsScatter.minY = (py + limitsScatter.minY)/2;
+			limitsScatter.maxY = (py + limitsScatter.maxY)/2;
 			
 			/*limitsScatter.minX = (limitsScatter.minX - px)/2;
 			limitsScatter.maxX = (limitsScatter.maxX - px)/2;
@@ -414,8 +414,8 @@
     
 	// Margins and sizes
 	var marginBarChart = {top: 20, right: 20, bottom: 20, left: 20},
-    width = 600 - marginBarChart.left - marginBarChart.right,
-    height = 280 - marginBarChart.top - marginBarChart.bottom;    
+    widthBars = 600 - marginBarChart.left - marginBarChart.right,
+    heightBars = 280 - marginBarChart.top - marginBarChart.bottom;    
 	// SVG Bars
 	var svgBar;
 
@@ -429,10 +429,10 @@
     var yScaleBars = d3.scaleLinear();
     var xAxisBars = d3.axisTop()
         .scale(xScaleBars)
-        .ticks(width > 500 ? 5:2)
-        .tickSize(-(height-marginBarChart.top-marginBarChart.bottom))
+        .ticks(widthBars > 500 ? 5:2)
+        .tickSize(-(heightBars-marginBarChart.top-marginBarChart.bottom))
         .tickFormat(d => d3.format(',')(d));
-	var barPadding = (height-(marginBarChart.bottom+marginBarChart.top))/(top_n*5);
+	var barPadding = (heightBars-(marginBarChart.bottom+marginBarChart.top))/(top_n*5);
 	
 	// Manage the time in the animation is showing
 	var yearSlice;
@@ -444,11 +444,15 @@
 
     d3.csv("./data/dataChartRace.csv").then( function(data) {
 		dataBarchart = data;
+		
 		svgBar = d3.select("#SvgBars")
-		.attr("width", width + marginBarChart.left + marginBarChart.right)
-		.attr("height", height + marginBarChart.top + marginBarChart.bottom)
-   
-      
+		.attr("width", widthBars + marginBarChart.left + marginBarChart.right)
+		.attr("height", heightBars + marginBarChart.top + marginBarChart.bottom)
+		/*.attr("width",'100%')
+		.attr("height", '100%')
+		.attr('viewBox','0 0 '+ Math.min(widthBars,heightBars) + ' ' + Math.min(widthBars,heightBars))
+		.attr('preserveAspectRatio',)
+      */
 		/*let title = svgBar.append('text')
 		 .attr('class', 'title')
 		 .attr('y', 24)
@@ -461,13 +465,14 @@
    
 		let caption = svgBar.append('text')
 		 .attr('class', 'caption')
-		 .attr('x', width)
-		 .attr('y', height-5)
+		 .attr('x', widthBars)
+		 .attr('y', heightBars-5)
 		 .style('text-anchor', 'end')
 		 .html('Nasa Exoplanets');*/
 
 		//if (error) throw error;
-		//console.log(dataBarchart);
+		//console.log(dataBarchart)
+		;
 		  
 		dataBarchart.forEach(function(d) {
 			d.value = +d.value;
@@ -488,11 +493,11 @@
   
 		xScaleBars
         .domain([0, d3.max(yearSlice, d => d.value)])
-        .range([marginBarChart.left, width-marginBarChart.right-65]);
+        .range([marginBarChart.left, widthBars-marginBarChart.right-65]);
   
 		yScaleBars
         .domain([top_n, 0])
-        .range([height-marginBarChart.bottom, marginBarChart.top]);
+        .range([heightBars-marginBarChart.bottom, marginBarChart.top]);
   
 		svgBar.append('g')
 		   .attr('class', 'axis xAxisBars')
@@ -542,8 +547,8 @@
 
 		yearText = svgBar.append('text')
 		  .attr('class', 'yearText')
-		  .attr('x', width-marginBarChart.right)
-		  .attr('y', height-25)
+		  .attr('x', widthBars-marginBarChart.right)
+		  .attr('y', heightBars-25)
 		  .style('text-anchor', 'end')
 		  .html(~~year)
 		  .call(halo, 10);
