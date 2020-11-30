@@ -7,7 +7,7 @@
 	var dragginToolTip = false;
 	var deltaXtt = 0;
 	var deltaYtt = 0;
-
+	var filterText;
 	var closeTooltipPlanet = function()
 	{
 		planetTooltip
@@ -35,7 +35,7 @@
 	{
 		dragginToolTip = false;
 	}
-	var handleMouseOverToolTip = function()
+	var handleMouseOverToolTip = function(e,d)
 	{
 		if(dragginToolTip)
 		{
@@ -54,6 +54,7 @@
 		planetTooltip
 				//.style('left',(d3.mouse(this)[0] ) + 'px')
 				//.style('top',(d3.mouse(this)[1] ) + 'px' )
+				
 				.on('mousedown' , handleMouseDownToolTip)
 				.on('mouseover' , handleMouseOverToolTip)
 				.on('mouseup' , handleMouseUpToolTip)
@@ -64,7 +65,14 @@
 				.style("border-radius", "5px")
 				.style('left',(d3.select(this).attr('cx') +250 ) + 'px')
 				.style('top',(d3.select(this).attr('cy') + 250 ) + 'px' )
-				.style('opacity', 1);
+				.style('opacity', 1)
+				//  .call(d3.drag()
+					//.on("start", handleMouseDownToolTip)
+					//.on("drag",  (event,d) => (planetTooltip.style('left', event.x + 'px'), planetTooltip.style('top', event.y + 'px'))))
+					//.on("end", handleMouseUpToolTip)
+					//.on("start.update drag.update end.update", update))
+					;
+
 		planetTooltip
 				.select('#lblPlanetName').html(d.pl_name);
 		planetTooltip
@@ -126,7 +134,25 @@
 							return 2;
 						
 					}
-			);
+			)
+			/*.attr('cx', function(d)
+					{
+						if(Math.pow(xMap(d)- mx,  2) + Math.pow(yMap(d) - my, 2) <= 1600)
+							return xMap(d) + (xMap(d) - mx)*5/4;
+						else
+							return xMap(d);
+						
+					}
+			)
+			.attr('cy', function(d)
+					{
+						if(Math.pow(yMap(d)- mx,  2) + Math.pow(yMap(d) - my, 2) <= 1600)
+							return yMap(d) + (yMap(d) - my)*5/4;
+						else
+							return yMap(d)*;
+						
+					}
+			)*/;
 	}
 	var handleMouseOverSvgScatter = function()
 	{
@@ -270,6 +296,8 @@
 	var animation = function()
 	{
 		
+		resetFilter();
+
 		year = 1989; //1989 
 		month = 5; //5
 		var counter = 0;
@@ -282,6 +310,9 @@
 		
 		var ticker = d3.interval(e => {
 			
+			svgLines.select('.Limit2').data().forEach(d=> d.x = xScaleLines(timeConv(year + '-' + month)));
+			svgLines.select('.Limit2').attr('cx',d=>d.x);
+			filterInTime();
 			// Data of the currente year-month
 			yearSlice = dataBarchart.filter(d => d.yearR == year && !isNaN(d.value) && d.monthnumber == month)
 				.sort((a,b) => b.value - a.value)
@@ -596,7 +627,7 @@
     var tickDuration = 200;
 	// Maximum number of barrs allowed in the plot
     var top_n = 11;
-
+	//var top_n = 4;
 	//Scales for barchart plot
     var xScaleBars = d3.scaleLinear();
     var yScaleBars = d3.scaleLinear();
@@ -619,8 +650,14 @@
 		dataBarchart = data;
 		
 		svgBar = d3.select("#SvgBars")
-		.attr("width", widthBars + marginBarChart.left + marginBarChart.right)
-		.attr("height", heightBars + marginBarChart.top + marginBarChart.bottom)
+		//.attr("width", widthBars + marginBarChart.left + marginBarChart.right)
+		//.attr("height", heightBars + marginBarChart.top + marginBarChart.bottom)
+		.attr('width', '100%')
+		.attr('height', '100%')
+		.attr('viewBox','0 0 '+  widthBars +' '+ heightBars)
+		.attr('preserveAspectRatio','xMinYMin')
+		//.append('g')
+		;
 		/*.attr("width",'100%')
 		.attr("height", '100%')
 		.attr('viewBox','0 0 '+ Math.min(widthBars,heightBars) + ' ' + Math.min(widthBars,heightBars))
@@ -721,11 +758,14 @@
 
 		yearText = svgBar.append('text')
 		  .attr('class', 'yearText')
-		  .attr('x', widthBars-marginBarChart.right)
+		  .style('fill', 'white')
+		  .style('font-size', 20)
+		  .style('background', 'black')
+		  .attr('x', widthBars-2*marginBarChart.right)
 		  .attr('y', heightBars-25)
-		  .style('text-anchor', 'end')
+		  .style('text-anchor', 'middle')
 		  .html(~~year)
-		  .call(halo, 10);
+		  //.call(halo, 10);
   
  });
     
@@ -765,16 +805,18 @@
 	var dataLinesAnim1;
 	
 	// Margins and sizes
-	var marginLines = {top: 20, right: 20, bottom: 20, left: 40},
-    widthLines = 500 - marginLines.left - marginLines.right,
-    heightLines = 230 - marginLines.top - marginLines.bottom;
+	var marginLines = {top: 20, right: 20, bottom: 90, left: 60},
+    widthLines = 700 - marginLines.left - marginLines.right,
+    heightLines = 300 - marginLines.top - marginLines.bottom;
 	
 	var xScaleLines = d3.scaleTime().range([0,widthLines]);
 	var yScaleLines = d3.scaleLinear().rangeRound([heightLines,0]);
 	
 	var xAxisLines = d3.axisBottom();
 	var yAxisLines = d3.axisLeft();
-
+	
+	var spheresFilters;
+	
 	var svgLines ; 
 	var lineGenerator = d3.line()
 		.x(function(d) { return xScaleLines(d.date); })
@@ -802,8 +844,16 @@
 				]);
 		xAxisLines.scale(xScaleLines);
 		yAxisLines.scale(yScaleLines);
+				
 		
+		
+
+
 		svgLines = d3.select("#SvgLines")
+			//.attr('width', '100%')
+			//.attr('height', '100%')
+			//.attr('viewBox','0 0 '+  widthLines +' '+ heightLines)
+			//.attr('preserveAspectRatio','xMinYMin')
 			.attr("width", widthLines + marginLines.left + marginLines.right)
 			.attr("height", heightLines + marginLines.top + marginLines.bottom)
 		.append("g")
@@ -818,7 +868,14 @@
 			.attr("class", "axis yAxisLines")
 			//.attr("transform", "translate(" + marginLines.left + ",0)")
 			.call(yAxisLines);
-
+		
+		svgLines.selectAll('.domain')
+			.style('stroke','white')
+			.style('stroke-width','2px');
+		svgLines.selectAll('.axis>.tick>text')
+			.style('color','white')
+			.style("font-size",15);
+		
 		var lines = svgLines.selectAll("lines")
 			.data(dataLines2)
 			.enter()
@@ -831,7 +888,100 @@
 			.style('stroke-width', 3)
 			.style('stroke', d => colors(nameDMDeleteSpace(d.id)));
 
+		// ------------- Slider for the  filter
+		svgLines.append('line')
+			.attr('class','filterTime')				
+			.attr('x1', 0)
+			.attr('x2', widthLines )
+			.attr('y1', heightLines + 1/2*marginLines.bottom)
+			.attr('y2', heightLines + 1/2*marginLines.bottom)
+			.style('stroke','#777')
+			.style('stroke-width','5');
+
+		svgLines.append('line')
+			.attr('class','filterTime realFilter')				
+			.attr('x1', 0)
+			.attr('x2', widthLines )
+			.attr('y1', heightLines + 1/2*marginLines.bottom)
+			.attr('y2', heightLines + 1/2*marginLines.bottom)
+			.style('stroke','white')
+			.style('stroke-width','5');
+		
+		var filters = [{name:'Limit1', x:0},{name:'Limit2',x:widthLines}];
+		
+		spheresFilters = svgLines.selectAll('.filterTimeS')
+			.data(filters)
+			.enter()
+			.append('circle')
+			.attr('class',d => 'filterTimeS ' + d.name)				
+			.attr('r', 4)
+			.attr('cx', (d,i) => d.x)
+			.attr('cy', heightLines + 1/2*marginLines.bottom)
+			.style('stroke','#999')
+			.style('stroke-width','5')
+			.call(d3.drag()
+                  .on("start", dragstarted)
+                  .on("drag", dragged)
+                  .on("end", dragended)
+                  );
+		filterText = svgLines.append('text')
+		  .attr('class', 'yearText')
+		  .style('fill', 'white')
+		  .style('font-size', 20)
+		  .style('background', 'black')
+		  .attr('x', widthLines/2-2)
+		  .attr('y', heightLines + marginLines.bottom - 5 )
+		  .style('text-anchor', 'middle')
+		  .html('-')
+
 	});
+    
+
+	
+	var filterDotsmin = 0;
+	var filterDotsmax = widthLines;
+
+	function resetFilter()
+	{
+		spheresFilters.data().forEach(function(d,i){d.x = i*widthLines;});
+	    spheresFilters.attr("cx", d=> d.x);
+		filterInTime();
+	}
+
+	function dragstarted(d) {
+		d3.select(this).raise().classed("active", true);
+	}
+
+	function dragged(d) 
+	{
+		d3.select(this).attr("cx", d.x = d3.max([d3.min([d3.event.x,widthLines]),0]));
+		filterInTime();
+	}
+
+	function filterInTime()
+	{
+		filterDotsmin = d3.min(spheresFilters.data().map(r=>r.x));
+		filterDotsmax = d3.max(spheresFilters.data().map(r=>r.x));
+		svgLines.select('.realFilter')	
+			.attr('x1', filterDotsmin)
+			.attr('x2', filterDotsmax)
+			.attr('y1', heightLines + 1/2*marginLines.bottom)
+			.attr('y2', heightLines + 1/2*marginLines.bottom);
+		svgScatter.selectAll('.dot')
+			.filter(d => xScaleLines(timeConv(d.disc_pubdate)) >=filterDotsmin && xScaleLines(timeConv(d.disc_pubdate)) <=filterDotsmax)
+			.style('visibility','visible');
+
+		svgScatter.selectAll('.dot')
+			.filter(d => !(xScaleLines(timeConv(d.disc_pubdate)) >=filterDotsmin && xScaleLines(timeConv(d.disc_pubdate)) <=filterDotsmax))
+			.style('visibility','hidden');
+		var format = d3.timeFormat("%Y-%m");
+		filterText.html(format(xScaleLines.invert(filterDotsmin)) + ' to ' + format(xScaleLines.invert(filterDotsmax)));
+		
+	}
+
+	function dragended(d) {
+		d3.select(this).classed("active", false);
+	}
 
 	
 
