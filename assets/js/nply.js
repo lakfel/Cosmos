@@ -105,7 +105,7 @@
 				.style('opacity', 1);
 		methodTooltip
 				.select('#imgMethod')
-				.attr('src','./assets/img/' + nameDMDeleteSpace(d.method) + '.jpg');
+				.attr('src','assets/img/' + nameDMDeleteSpace(d.method) + '.jpg');
 		methodTooltip
 				.select('#urlDiscoveryMethod').html('....');
 	}
