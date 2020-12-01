@@ -618,10 +618,15 @@
 			// Linechart animation ----------------------------------------------------------------------------------------------------------
 			dataLinesAnim1 = dataLines1.filter(d => timeConv(d.code) <= timeConv(year + "-" + month));
 			dataLinesAnim1.columns = dataLines1.columns;
+			let maxLi, minLi;
+			maxLi = -1;
+			minLi = 10000;
 			dataLinesAnim2 = dataLinesAnim1.columns.slice(4).map(function(id) {
 			return {
 				id: id,
 				values: dataLinesAnim1.map(function(d){
+					minLi = (+d[id]) < minLi ? +d[id] : minLi;
+					maxLi = (+d[id]) > maxLi ? +d[id] : maxLi;
 					return {
 						date: timeConv(d.code),
 						measurement: +d[id]
@@ -629,22 +634,30 @@
 				})
 			};
 			});
-			var domi = [(0), d3.max(dataLinesAnim2, function(c) {
+			/*let domi = [(0), d3.max(dataLinesAnim2, function(c) {
 					return d3.max(c.values, function(d) {
 						return d.measurement + 4; });
 						})
-					];
+					];*/
+			let domi = [minLi,maxLi + 3];
 			yScaleLines.domain(domi);
 			
+			yAxisLines.scale(yScaleLines);
 			//yAxisLines.scale(yScaleLines);
 			var sl =svgLines.select('.yAxisLines');
-			svgLines.select('.yAxisLines')
+			svgLines.selectAll('.yAxisLines')
 				.transition()
 				.duration(tickDuration)
 				.ease(d3.easeLinear)
-				.call(yScaleLines);
-			
-			
+				.call(yAxisLines);
+				
+				
+			svgLines.selectAll('.domain')
+				.style('stroke','white')
+				.style('stroke-width','2px');
+			svgLines.selectAll('.axis>.tick>text')
+				.style('color','white')
+				.style("font-size",15);
 			let lines = svgLines.selectAll('.lines').data(dataLinesAnim2, d => d.id);
 			
 			lines
@@ -848,7 +861,7 @@
 
     d3.csv("./data/dataChartRace.csv").then( function(data) {
 		dataBarchart = data;
-		document.getElementsByTagName('Body')[0].style.zoom = '77%';
+		//document.getElementsByTagName('Body')[0].style.zoom = '77%';
 		svgBar = d3.select("#SvgBars")
 		//.attr("width", widthBars + marginBarChart.left + marginBarChart.right)
 		//.attr("height", heightBars + marginBarChart.top + marginBarChart.bottom)
