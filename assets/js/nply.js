@@ -312,20 +312,25 @@
 
 	var animation = function()
 	{
-		if(animationInProgress) return;
+		if(animationInProgress) 
+		{
+			year = 2020;
+			month = 09;
+			return;
+		}
 		animationInProgress = true;
 		svgScatter.selectAll('.axis')
 				.style('visibility','hidden');
 
+		xSScale.domain([-60,60]);
+		rSScale.domain([0,8000]);
+		ySScale.domain([-60,60]);
 		svgScatter.selectAll('.dot')
 				.data([])
 				.style('visibility','hidden')
 				.exit()
 				.remove();
 		svgScatter.selectAll('.solarSystem')
-				.transition()
-				.duration(20)
-				.ease(d3.easeLinear)
 				//.attr('class','solarSystem')
 				//.attr('r', d => d.r)
 				.attr('r', d => rSScale(d.r))
@@ -447,7 +452,8 @@
 						.style('visibility','hidden');
 				
 				
-			
+				
+				d3.select('#btnPlay').attr('class','btn btn-warning').html('Go to year 2020');
 				animationPart2();
 			}
 		},30);
@@ -799,6 +805,7 @@
 
 			if((year == 2020 && month > 10) || year>2020 ) {animationInProgress = false ;
 			svgLines.select('.realFilter').style('stroke','white');
+			d3.select('#btnPlay').attr('class','btn btn-neutral').html('Animate');
 			ticker.stop()};
 	//     year = d3.format('.1f')((+year) + 0.1);
 	   },tickDuration);
