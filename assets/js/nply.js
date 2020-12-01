@@ -1105,7 +1105,7 @@
 			.enter()
 			.append('circle')
 			.attr('class',d => 'filterTimeS ' + d.name)				
-			.attr('r', 4)
+			.attr('r', 10)
 			.attr('cx', (d,i) => d.x)
 			.attr('cy', heightLines + 1/2*marginLines.bottom)
 			.style('stroke','#999')
