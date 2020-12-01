@@ -1,4 +1,5 @@
 //----------------------------------------------------------- Common --------------------------------------------------------------------------------//
+	 
 	var limitsScatter = {minX:0,maxX:0,minY:0,maxY:0, topMaxX:0, topMinX:0, topMaxY:0, topMinY:0};
 	var planetTooltip = d3.select("#infoCardScatter");
 	var methodTooltip = d3.select("#infoCardBars");
@@ -847,7 +848,7 @@
 
     d3.csv("./data/dataChartRace.csv").then( function(data) {
 		dataBarchart = data;
-		
+		document.getElementsByTagName('Body')[0].style.zoom = '77%';
 		svgBar = d3.select("#SvgBars")
 		//.attr("width", widthBars + marginBarChart.left + marginBarChart.right)
 		//.attr("height", heightBars + marginBarChart.top + marginBarChart.bottom)

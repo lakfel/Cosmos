@@ -60,9 +60,9 @@
 	{
 		dataScatter = data;
 		svgScatter = d3.select("#SvgScatter")
-			.attr("width", widthScatter + marginScatter.left + marginScatter.right)
+			//.attr("width", widthScatter + marginScatter.left + marginScatter.right)
 			.attr("height", heightScatter + marginScatter.top + marginScatter.bottom) 
-			//.attr('width', '95%')
+			.attr('width', '95%')
 			//.attr('height', '95%')
 			//.attr('viewBox','0 0 '+Math.min(widthScatter,heightScatter)+' '+Math.min(widthScatter,heightScatter))
 			//.attr('viewBox','0 0 '+ widthScatter +' '+heightScatter)
