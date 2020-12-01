@@ -4,7 +4,7 @@
 	// ------ Scatter data
 	var dataScatter;
 	// Margins and sizes
-	var marginScatter = {top: 20, right: 20, bottom: 20, left: 20},
+	var marginScatter = {top: 35, right: 20, bottom: 20, left: 20},
     widthScatter = 650 - marginScatter.left - marginScatter.right,
     heightScatter = 650- marginScatter.top - marginScatter.bottom;
 	
@@ -103,6 +103,16 @@
 		  });
 
 		// Fixing domains based on data
+		filterText2 = svgScatter.append('text')
+		  .attr('class', 'yearText')
+		  .style('fill', 'white')
+		  .style('font-size', 20)
+		  .style('background', 'black')
+		  .attr('x', 0)
+		  .attr('y',  0 )
+		  .style('text-anchor', 'start')
+		  .html('-');
+
 		
 		limitsScatter.minX = d3.min(dataScatter, xValueScatter);
 		limitsScatter.topMinX = limitsScatter.minX;
@@ -118,10 +128,10 @@
 		
 		xScaleScatter.domain([limitsScatter.topMinX, limitsScatter.topMaxX]);
 		yScaleScatter.domain([limitsScatter.topMinY, limitsScatter.topMaxY]);
-	  
+
 		// x-axis
 		svgScatter.append("g")
-		  .attr("class", "x xAxisScatter")
+		  .attr("class", "axis xAxisScatter")
 		  .attr("transform", "translate(0," + yScaleScatter(0) + ")")
 		  .call(xAxisScatter)
 		.append("text")
@@ -134,7 +144,7 @@
 
 	  // y-axis
 		svgScatter.append("g")
-		  .attr("class", "y yAxisScatter")
+		  .attr("class", "axis yAxisScatter")
 		  .attr("transform", "translate(" + xScaleScatter(0) + ",0)")
 		  .call(yAxisScatter)
 		.append("text")

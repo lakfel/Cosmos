@@ -7,7 +7,7 @@
 	var dragginToolTip = false;
 	var deltaXtt = 0;
 	var deltaYtt = 0;
-	var filterText;
+	var filterText;var filterText2;
 	var closeTooltipPlanet = function()
 	{
 		planetTooltip
@@ -177,7 +177,7 @@
 		svgScatter.selectAll('.dot' + nameDMDeleteSpace(d.method))
 				.attr('r',5)
 				.style('opacity', 1);
-		
+			
 	}
 	var handleMouseOutBar = function(d, i)
 	{	
@@ -295,6 +295,195 @@
 
 	var animation = function()
 	{
+		
+		svgScatter.selectAll('.axis')
+				.style('visibility','hidden');
+
+		svgScatter.selectAll('.dot')
+				.style('visibility','hidden');
+
+
+		var solarSystem =  [
+			{"name": "sun", "symbol": "☉",  "color": "#FFFF55", "mass": 1, "r": 400,  "distance": 0, "velocity" : 1},
+            { "name": "mercury", "symbol": "☿", "color": "#D4CCC5", "mass": 0.17, "r":  32, "distance": 10.39 , "velocity" : 88},
+            { "name": "venus",   "symbol": "♀", "color": "#99CC32", "mass": 2.45, "r":  40, "distance": 12.723 , "velocity" : 225},
+            { "name": "earth", "symbol": "♁", "color": "#007FFF", "mass": 3, "r": 43, "distance": 15, "velocity" : 365 },
+            { "name": "mars",    "symbol": "♂", "color": "#FF7700", "mass": 0.32, "r":  46, "distance": 19.524 , "velocity" : 687},
+            { "name": "jupiter", "symbol": "♃", "color": "#D98719", "mass":  955, "r": 277, "distance": 30.203 , "velocity" : 1200},
+            { "name": "saturn",  "symbol": "♄", "color": "#B5A642", "mass":  286, "r": 152, "distance": 50.539 , "velocity" : 1600},
+            { "name": "uranus",  "symbol": "⛢", "color": "#7093DB", "mass":   44, "r": 100, "distance": 65.18 , "velocity" : 1800},
+            { "name": "neptune", "symbol": "♆", "color": "#7093DB", "mass":   52, "r": 95, "distance": 76.06 ,"velocity" : 2000}
+			];		
+		
+		var xSScale = d3.scaleLinear().range([0,widthScatter]);
+		var rSScale = d3.scaleLinear().range([0,widthScatter]);
+		var ySScale = d3.scaleLinear().range([heightScatter,0]);
+		 xSScale.domain([-60,60]);
+		 rSScale.domain([0,8000]);
+		 ySScale.domain([-60,60]);
+
+		
+		svgScatter.select(".xAxisScatter")
+		  //.attr("transform", "translate(0," + yScaleScatter(0) + ")")
+		  .call(xSScale)
+		svgScatter.select(".yAxisScatter")
+		  //.attr("transform", "translate(0," + yScaleScatter(0) + ")")
+		  .call(ySScale)
+		svgScatter.selectAll('.solarSystem')
+			.data(solarSystem)
+			.enter()
+			.append('circle')
+			.attr('class','solarSystem')
+			.attr('id', d => d.name)
+			.attr('r', d => rSScale(d.r))
+			.style('fill', d => d.color)
+			.attr('cx', function(d) {
+					d.initialAngle = d3.randomUniform(0, 2)();
+					return xSScale(d.distance*Math.cos(Math.PI*d.initialAngle));
+				})
+			.attr('cy', function(d) {
+					//d.initialAngle = d3.randomUniform(0, 2)();
+					return xSScale(d.distance*Math.sin(Math.PI*d.initialAngle));
+				});
+				
+		svgScatter.selectAll('.solarSystemL')
+			.data(svgScatter.selectAll('.solarSystem').data())
+			.enter()
+			.append('circle')
+			.attr('class','solarSystemL')
+			.attr('r', d =>xSScale(d.distance) -xSScale(0))
+			.attr('cx', d =>xSScale(0))
+			.attr('cy', d =>xSScale(0))
+			.style('fill', 'none')
+			.style('stroke', d=> d.color);
+			/*.attr('x1', function(d) {
+					
+					return xSScale(d.distance*Math.cos(Math.PI*(d.initialAngle -12*2/d.velocity )));
+				})
+			.attr('x2', function(d) {
+					//d.initialAngle = d3.randomUniform(0, 2)();
+					return xSScale(d.distance*Math.cos(Math.PI*d.initialAngle));
+				})
+			.attr('y1', function(d) {
+					
+					return ySScale(d.distance*Math.sin(Math.PI*(d.initialAngle -12*2/d.velocity )));
+				})
+			.attr('y2', function(d) {
+					//d.initialAngle = d3.randomUniform(0, 2)();
+					return ySScale(d.distance*Math.sin(Math.PI*d.initialAngle));
+				})
+			.style('stroke', d => d.color)
+			.style('stroke-width' , d => rSScale(d.r) / 4)*/;
+
+		var simDur = 0;
+		var initTicker = d3.interval(e=>{
+			svgScatter.selectAll('.solarSystem')
+				.transition()
+				.duration(20)
+				.ease(d3.easeLinear)
+				//.attr('class','solarSystem')
+				//.attr('r', d => d.r)
+				.attr('r', d => rSScale(d.r))
+				.attr('cx', function(d)
+					{
+						d.initialAngle +=  2*2/d.velocity;
+						return xSScale(d.distance*Math.cos(Math.PI*d.initialAngle));
+					})
+				.attr('cy', function(d)
+					{
+						//d.initialAngle = d3.randomUniform(0, 2)();
+						return xSScale(d.distance*Math.sin(Math.PI*d.initialAngle));
+					})
+			.style('opacity', (220-simDur)/220);
+					
+		
+		svgScatter.selectAll('.solarSystemL')
+			.transition()
+			.duration(30)
+			.ease(d3.easeLinear)
+			.attr('r', d =>xSScale(d.distance)-xSScale(0))
+			.attr('cx', d =>xSScale(0))
+			.attr('cy', d =>xSScale(0))
+			.style('opacity', (220-simDur)/220);
+			//.style('fill', 'none')
+			//.style('stroke', => d.color);
+			/*.attr('x1', function(d) {
+					
+					return xSScale(d.distance*Math.cos(Math.PI*(d.initialAngle -0.1)));
+				})
+			.attr('x2', function(d) {
+					//d.initialAngle = d3.randomUniform(0, 2)();
+					return xSScale(d.distance*Math.cos(Math.PI*d.initialAngle));
+				})
+			.attr('y1', function(d) {
+					
+					return ySScale(d.distance*Math.sin(Math.PI*(d.initialAngle - 0.1 )));
+				})
+			.attr('y2', function(d) {
+					//d.initialAngle = d3.randomUniform(0, 2)();
+					return ySScale(d.distance*Math.sin(Math.PI*d.initialAngle));
+				})
+			.style('stroke-width' , d => rSScale(d.r) / 4)*/;	
+			
+			if(simDur > 80)
+			{
+				 xSScale.domain([-60 *(1+(simDur - 79)/10),60 *(1+(simDur - 79)/10)]);
+				 rSScale.domain([0 *(1+(simDur - 79)/10),8000*(1+(simDur - 79)/10)]);
+				 ySScale.domain([-60*(1+(simDur - 79)/10),60*(1+(simDur - 79)/10)]);
+				svgScatter.select(".xAxisScatter")
+				  //.attr("transform", "translate(0," + yScaleScatter(0) + ")")
+				  .call(xSScale)
+				svgScatter.select(".yAxisScatter")
+				  //.attr("transform", "translate(0," + yScaleScatter(0) + ")")
+				  .call(ySScale)
+			}
+			simDur +=1;
+			if(simDur == 180)
+			{
+				xScaleScatter.domain([-limitsScatter.maxX, limitsScatter.maxX]);
+				yScaleScatter.domain([limitsScatter.minY, limitsScatter.maxY]);
+				
+				svgScatter.selectAll('.axis')
+						.style('visibility','visible');
+				svgScatter.select('.xAxisScatter')
+						.transition()
+						.duration(50)
+						.ease(d3.easeLinear)
+					.attr("transform", "translate(0," + xScaleScatter(0) + ")")
+					.call(xAxisScatter);
+				svgScatter.select('.yAxisScatter')
+						.transition()
+						.duration(50)
+						.ease(d3.easeLinear)
+					.attr("transform", "translate(" + xScaleScatter(0) + ",0)")
+					.call(yAxisScatter);
+				
+				svgScatter.selectAll('.dot').data([]).exit().remove();
+			}
+			if(simDur == 220)
+			{
+				initTicker.stop();
+				svgScatter.selectAll('.solarSystem')
+						.style('visibility','hidden');
+
+				svgScatter.selectAll('.solarSystemL')
+						.style('visibility','hidden');
+				
+				
+			
+				animationPart2();
+			}
+		},30);
+
+	
+	}
+	var animationPart2 = function ()
+	{
+		svgScatter.selectAll('.axis')
+				.style('visibility','visible');
+
+		svgScatter.selectAll('.dot')
+				.style('visibility','visible');
 		
 		resetFilter();
 
@@ -522,7 +711,7 @@
 			//tickDuration = d3.max([d3.sum(yearSlice, d=> d.value) * thickMaximum/1292, tickMinimum]);
 			if(counter ==0)
 			{
-				planetsData = dataScatter.filter(d => (d.qym <= year*12 + month));
+				planetsData = dataScatter.filter(d => (d.qym <= year*12 + month) && (d.qym >=12));
 				tope = Math.floor((planetsData.length - prevLen)/10) + 1;
 				prevLen =  planetsData.length;
 				if(tope > 1)
@@ -531,7 +720,7 @@
 				}
 			}
 			counter +=1;
-			planetsData = dataScatter.filter(d => (d.qym < year*12 + month) || (d.qym == year*12 + month && d.filterTime <= counter*10));
+			planetsData = dataScatter.filter(d => ((d.qym < year*12 + month) || (d.qym == year*12 + month && d.filterTime <= counter*10)) && (d.qym >=12));
 			
 				
 			limitsScatter.minX = d3.min(planetsData, xValueScatter);
@@ -567,6 +756,7 @@
 				.attr("cy", yMap)
 				.style("stroke", "white")
 				.style("fill", d => colors(nameDMDeleteSpace(d.discoverymethod) ))
+				.style('visibility','visible')
 				.on('mouseover', handleMouseOverDot)
 				.on('mouseout', handleMouseOutDot)
 				.on('click', handleClickDot)
@@ -584,6 +774,7 @@
 					.ease(d3.easeLinear)
 					//.style('fill', 'blue')
 					.style("stroke", "black")
+					.style('visibility','visible')
 					.attr("r", 2)
 					.attr("cx", xMap)
 					.attr("cy", yMap);
@@ -932,7 +1123,7 @@
 		  .attr('x', widthLines/2-2)
 		  .attr('y', heightLines + marginLines.bottom - 5 )
 		  .style('text-anchor', 'middle')
-		  .html('-')
+		  .html('-');
 
 	});
     
@@ -976,7 +1167,7 @@
 			.style('visibility','hidden');
 		var format = d3.timeFormat("%Y-%m");
 		filterText.html(format(xScaleLines.invert(filterDotsmin)) + ' to ' + format(xScaleLines.invert(filterDotsmax)));
-		
+		filterText2.html(format(xScaleLines.invert(filterDotsmin)) + ' to ' + format(xScaleLines.invert(filterDotsmax)));
 	}
 
 	function dragended(d) {
