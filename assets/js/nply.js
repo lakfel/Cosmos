@@ -222,7 +222,7 @@
 		svgScatter.selectAll('.dot')
 				.style('opacity', 0.2);
 		d3.select(this)
-				.attr('r', 5)
+				.attr('r', 7)
 				.style('opacity', 1);
 				
 		
@@ -343,7 +343,11 @@
 					{
 						//d.initialAngle = d3.randomUniform(0, 2)();
 						return xSScale(d.distance*Math.sin(Math.PI*d.initialAngle));
-					})		
+					});
+		svgScatter.selectAll('.solarSystemL')
+			.attr('r', d =>xSScale(d.distance) -xSScale(0))
+			.attr('cx', d =>xSScale(0))
+			.attr('cy', d =>xSScale(0));
 		svgScatter.selectAll('.solarSystem')
 				.style('visibility','visible');
 		
@@ -383,25 +387,6 @@
 			.attr('cx', d =>xSScale(0))
 			.attr('cy', d =>xSScale(0))
 			.style('opacity', (220-simDur)/220);
-			//.style('fill', 'none')
-			//.style('stroke', => d.color);
-			/*.attr('x1', function(d) {
-					
-					return xSScale(d.distance*Math.cos(Math.PI*(d.initialAngle -0.1)));
-				})
-			.attr('x2', function(d) {
-					//d.initialAngle = d3.randomUniform(0, 2)();
-					return xSScale(d.distance*Math.cos(Math.PI*d.initialAngle));
-				})
-			.attr('y1', function(d) {
-					
-					return ySScale(d.distance*Math.sin(Math.PI*(d.initialAngle - 0.1 )));
-				})
-			.attr('y2', function(d) {
-					//d.initialAngle = d3.randomUniform(0, 2)();
-					return ySScale(d.distance*Math.sin(Math.PI*d.initialAngle));
-				})
-			.style('stroke-width' , d => rSScale(d.r) / 4)*/;	
 			
 			if(simDur > 80)
 			{
@@ -858,7 +843,7 @@
 	// Margins and sizes
 	var marginBarChart = {top: 20, right: 20, bottom: 20, left: 20},
     widthBars = 600 - marginBarChart.left - marginBarChart.right,
-    heightBars = 300 - marginBarChart.top - marginBarChart.bottom;    
+    heightBars = 260 - marginBarChart.top - marginBarChart.bottom;    
 	// SVG Bars
 	var svgBar;
 
@@ -1046,7 +1031,7 @@
 	// Margins and sizes
 	var marginLines = {top: 20, right: 20, bottom: 100, left: 60},
     widthLines = 600 - marginLines.left - marginLines.right,
-    heightLines = 350 - marginLines.top - marginLines.bottom;
+    heightLines = 320 - marginLines.top - marginLines.bottom;
 	
 	var xScaleLines = d3.scaleTime()
         .range([marginLines.left, widthLines-marginLines.right-65]);
@@ -1126,10 +1111,11 @@
 			.style('stroke','white')
 			.style('stroke-width','2px');
 		svgLines.selectAll('.axis>.tick>text')
-			.attr("transform", "rotate(-40)")
 			.style('color','white')
 			.style("font-size",13)
 			.style('text-anchor', 'end');
+		svgLines.selectAll('.xAxisLines>.tick>text')
+			.attr("transform", "rotate(-40)");
 ;
 		
 		var lines = svgLines.selectAll("lines")

@@ -9,8 +9,8 @@
 	var dataScatter;
 	// Margins and sizes
 	var marginScatter = {top: 35, right: 20, bottom: 20, left: 20},
-    widthScatter = 600 - marginScatter.left - marginScatter.right,
-    heightScatter = 600- marginScatter.top - marginScatter.bottom;
+    widthScatter = 500 - marginScatter.left - marginScatter.right,
+    heightScatter = 400- marginScatter.top - marginScatter.bottom;
 	
 	
 	var planetsData;
@@ -64,7 +64,8 @@
 			//.attr("height", heightScatter + marginScatter.top + marginScatter.bottom) 
 			.attr('width', '95%')
 			.attr('height', '95%')
-			.attr('viewBox','0 0 '+Math.min(widthScatter,heightScatter)+' '+Math.min(widthScatter,heightScatter))
+			//.attr('viewBox','0 0 '+Math.min(widthScatter,heightScatter)+' '+Math.min(widthScatter,heightScatter))
+			//.attr('viewBox','0 0 '+ widthScatter +' '+ heightScatter )
 			.attr('viewBox','0 0 '+ widthScatter +' '+heightScatter)
 			.attr('preserveAspectRatio','xMinYMin')
 			//.append(“svg”)
@@ -75,7 +76,10 @@
 		  .append("g")
 			//.attr('transform', 'translate(' + Math.min(widthScatter,heightScatter) / 2 + ','+ Math.min(widthScatter,heightScatter) / 2 + ')')
 			.attr("transform", "translate(" + marginScatter.left + "," + marginScatter.top + ")");
-
+			
+		yScaleScatter.range([heightScatter - marginScatter.top - marginScatter.bottom , 0]);
+		yAxisScatter.scale(yScaleScatter);
+		xScaleScatter.range([0, widthScatter - marginScatter.left - marginScatter.right]);
 		// change string (from CSV) into number format
 		var countInQYm = 0;
 		var lastQyM = 0;
@@ -186,9 +190,9 @@
             { "name": "neptune", "symbol": "♆", "color": "#7093DB", "mass":   52, "r": 95, "distance": 76.06 ,"velocity" : 2000}
 			];		
 		
-		 xSScale = d3.scaleLinear().range([0,widthScatter]);
+		 xSScale = d3.scaleLinear().range([0,widthScatter - marginScatter.left - marginScatter.right]);
 		 rSScale = d3.scaleLinear().range([0,widthScatter]);
-		 ySScale = d3.scaleLinear().range([heightScatter,0]);
+		 ySScale = d3.scaleLinear().range([heightScatter - marginScatter.top - marginScatter.bottom , 0]);
 		 xSScale.domain([-60,60]);
 		 rSScale.domain([0,8000]);
 		 ySScale.domain([-60,60]);
