@@ -104,10 +104,10 @@
 		methodTooltip = d3.select("#infoCardBars");
 		methodTooltip
 				.style('visibility','visible')
-				.style("border-color", "white")
-				.style("border", "solid")
-				.style("border-width", "4px")
-				.style("border-radius", "5px")
+				//.style("border-color", "white")
+				//.style("border", "solid")
+				//.style("border-width", "4px")
+				//.style("border-radius", "5px")
 				.style('left','150px')
 				.style('top','50px')
 				.style('opacity', 1);
