@@ -438,23 +438,26 @@
 				  .call(ySScale)
 			}
 			simDur +=1;
-			if(simDur == 180)
+			if(simDur >= 180 && simDur <= 184)
 			{
 				xScaleScatter.domain([-limitsScatter.maxX, limitsScatter.maxX]);
 				yScaleScatter.domain([limitsScatter.minY, limitsScatter.maxY]);
 				
 				svgScatter.selectAll('.axis')
+						.style('opacity',0)
 						.style('visibility','visible');
 				svgScatter.select('.xAxisScatter')
 						.transition()
-						.duration(50)
+						.duration(30)
 						.ease(d3.easeLinear)
 					.attr("transform", "translate(0," + xScaleScatter(0) + ")")
+						.style('opacity', (simDur - 179)/5)
 					.call(xAxisScatter);
 				svgScatter.select('.yAxisScatter')
 						.transition()
-						.duration(50)
+						.duration(30)
 						.ease(d3.easeLinear)
+						.style('opacity',(simDur - 179)/5)
 					.attr("transform", "translate(" + xScaleScatter(0) + ",0)")
 					.call(yAxisScatter);
 				
