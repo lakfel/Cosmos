@@ -9,8 +9,8 @@
 	var dataScatter;
 	// Margins and sizes
 	var marginScatter = {top: 35, right: 20, bottom: 20, left: 20},
-    widthScatter = 650 - marginScatter.left - marginScatter.right,
-    heightScatter = 650- marginScatter.top - marginScatter.bottom;
+    widthScatter = 600 - marginScatter.left - marginScatter.right,
+    heightScatter = 600- marginScatter.top - marginScatter.bottom;
 	
 	
 	var planetsData;
@@ -61,12 +61,12 @@
 		dataScatter = data;
 		svgScatter = d3.select("#SvgScatter")
 			//.attr("width", widthScatter + marginScatter.left + marginScatter.right)
-			.attr("height", heightScatter + marginScatter.top + marginScatter.bottom) 
+			//.attr("height", heightScatter + marginScatter.top + marginScatter.bottom) 
 			.attr('width', '95%')
-			//.attr('height', '95%')
-			//.attr('viewBox','0 0 '+Math.min(widthScatter,heightScatter)+' '+Math.min(widthScatter,heightScatter))
-			//.attr('viewBox','0 0 '+ widthScatter +' '+heightScatter)
-			//.attr('preserveAspectRatio','xMinYMin')
+			.attr('height', '95%')
+			.attr('viewBox','0 0 '+Math.min(widthScatter,heightScatter)+' '+Math.min(widthScatter,heightScatter))
+			.attr('viewBox','0 0 '+ widthScatter +' '+heightScatter)
+			.attr('preserveAspectRatio','xMinYMin')
 			//.append(“svg”)
 			.on("wheel", onWheel)
 			.on("mouseover",handleMouseMoveInSvgScatter)

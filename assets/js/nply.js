@@ -443,6 +443,31 @@
 				
 		
 			}
+			if(simDur >= 216 && simDur <= 220)
+			{
+				let tempo = simDur - 216;
+				
+				xScaleScatter.domain([-0.25*tempo, 7 * tempo / 4]);
+				yScaleScatter.domain([-0.25*tempo, 3*tempo]);
+				
+				
+				svgScatter.select('.xAxisScatter')
+						.transition()
+						.duration(30)
+						.ease(d3.easeLinear)
+					.attr("transform", "translate(0," + xScaleScatter(0) + ")")
+					.call(xAxisScatter);
+				svgScatter.select('.yAxisScatter')
+						.transition()
+						.duration(30)
+						.ease(d3.easeLinear)
+					.attr("transform", "translate(" + yScaleScatter(0) + ",0)")
+					.call(yAxisScatter);
+				
+				svgScatter.selectAll('.dot').data([]).exit().remove();
+				
+		
+			}
 			if(simDur == 220)
 			{
 				initTicker.stop();
@@ -706,6 +731,7 @@
 			console.log('Planets');
 			console.log('Planets');
 			let dots = svgScatter.selectAll('.dot').data(planetsData, d => d.rowid);
+			//let dots = svgScatter.selectAll('.dot').data(planetsData);//, d => d.rowid);
 			//tickDuration = d3.max([d3.sum(yearSlice, d=> d.value) * thickMaximum/1292, tickMinimum]);
 			if(counter ==0)
 			{
@@ -722,13 +748,13 @@
 			planetsData = dataScatter.filter(d => ((d.qym < year*12 + month) || (d.qym == year*12 + month && d.filterTime <= counter*10)) && (d.qym >=12));
 			
 				
-			limitsScatter.minX = d3.min(planetsData, xValueScatter);
-			limitsScatter.minY = d3.min(planetsData, yValueScatter);
-			limitsScatter.maxX = d3.max(planetsData, xValueScatter);
-			limitsScatter.maxY = d3.max(planetsData, yValueScatter);
+			limitsScatter.minX = d3.min([d3.min(planetsData, xValueScatter),0]);
+			limitsScatter.minY = d3.min([d3.min(planetsData, yValueScatter),0]);
+			limitsScatter.maxX = d3.max([d3.max(planetsData, xValueScatter),0]);
+			limitsScatter.maxY = d3.max([d3.max(planetsData, yValueScatter),0]);
 			
-			xScaleScatter.domain([limitsScatter.minX, limitsScatter.maxX]);
-			yScaleScatter.domain([limitsScatter.minY, limitsScatter.maxY]);
+			xScaleScatter.domain([-1 + limitsScatter.minX, limitsScatter.maxX + 1]);
+			yScaleScatter.domain([-1 + limitsScatter.minY, limitsScatter.maxY + 1]);
 			
 
 			svgScatter.select('.xAxisScatter')
@@ -832,7 +858,7 @@
 	// Margins and sizes
 	var marginBarChart = {top: 20, right: 20, bottom: 20, left: 20},
     widthBars = 600 - marginBarChart.left - marginBarChart.right,
-    heightBars = 280 - marginBarChart.top - marginBarChart.bottom;    
+    heightBars = 300 - marginBarChart.top - marginBarChart.bottom;    
 	// SVG Bars
 	var svgBar;
 
@@ -1018,13 +1044,16 @@
 	var dataLinesAnim1;
 	
 	// Margins and sizes
-	var marginLines = {top: 20, right: 20, bottom: 90, left: 60},
-    widthLines = 700 - marginLines.left - marginLines.right,
-    heightLines = 400 - marginLines.top - marginLines.bottom;
+	var marginLines = {top: 20, right: 20, bottom: 100, left: 60},
+    widthLines = 600 - marginLines.left - marginLines.right,
+    heightLines = 350 - marginLines.top - marginLines.bottom;
 	
-	var xScaleLines = d3.scaleTime().range([0,widthLines]);
-	var yScaleLines = d3.scaleLinear().rangeRound([heightLines,0]);
+	var xScaleLines = d3.scaleTime()
+        .range([marginLines.left, widthLines-marginLines.right-65]);
+	var yScaleLines = d3.scaleLinear()
+        .range([heightLines-marginLines.bottom, marginLines.top]);
 	
+		
 	var xAxisLines = d3.axisBottom();
 	var yAxisLines = d3.axisLeft();
 	
@@ -1055,26 +1084,37 @@
 					return d.measurement + 4; });
 					})
 				]);
-		xAxisLines.scale(xScaleLines);
-		yAxisLines.scale(yScaleLines);
 				
 		
 		
 
 
 		svgLines = d3.select("#SvgLines")
-			//.attr('width', '100%')
-			//.attr('height', '100%')
-			//.attr('viewBox','0 0 '+  widthLines +' '+ heightLines)
-			//.attr('preserveAspectRatio','xMinYMin')
-			.attr("width", widthLines + marginLines.left + marginLines.right)
-			.attr("height", heightLines + marginLines.top + marginLines.bottom)
-		.append("g")
-			.attr("transform", "translate(" + marginLines.left + "," + marginLines.top + ")");
+			.attr('width', '100%')
+			.attr('height', '100%')
+			.attr('viewBox','0 0 '+  widthLines +' '+ heightLines)
+			//.attr('viewBox','0 0 '+  Math.min(widthLines,heightLines) +' '+ Math.min(widthLines,heightLines))
+			.attr('preserveAspectRatio','xMinYMin')
+			//.attr("width", widthLines + marginLines.left + marginLines.right)
+			//.attr("height", heightLines + marginLines.top + marginLines.bottom)
+			.append("g")
+				.attr("transform", "translate(" + marginLines.left + "," + marginLines.top + ")");
 
+		 /*xScaleLines
+			.range([marginLines.left, svgLines.node().parentNode.getBoundingClientRect().width -marginLines.right]);
+		 yScaleLines
+			.range([svgLines.node().parentNode.getBoundingClientRect().height + marginLines.bottom, marginLines.top]);*/
+		 xScaleLines
+			.range([0, widthLines  - marginLines.right -  marginLines.left]);
+		 yScaleLines
+			.range([heightLines- marginLines.bottom, 0 ]);
+		xAxisLines.scale(xScaleLines);
+		yAxisLines.scale(yScaleLines);
+			
 		svgLines.append("g")
 			.attr("class", "axis xAxisLines")
-			.attr("transform", "translate(0," + heightLines + ")")
+			//.attr("transform", "translate(0," + svgLines.node().parentNode.getBoundingClientRect().height + ")")
+			.attr("transform", "translate(0," + (heightLines - marginLines.bottom) + ")")
 			.call(xAxisLines);
 
 		svgLines.append("g")
@@ -1086,8 +1126,11 @@
 			.style('stroke','white')
 			.style('stroke-width','2px');
 		svgLines.selectAll('.axis>.tick>text')
+			.attr("transform", "rotate(-40)")
 			.style('color','white')
-			.style("font-size",15);
+			.style("font-size",13)
+			.style('text-anchor', 'end');
+;
 		
 		var lines = svgLines.selectAll("lines")
 			.data(dataLines2)
@@ -1105,22 +1148,22 @@
 		svgLines.append('line')
 			.attr('class','filterTime')				
 			.attr('x1', 0)
-			.attr('x2', widthLines )
-			.attr('y1', heightLines + 1/2*marginLines.bottom)
-			.attr('y2', heightLines + 1/2*marginLines.bottom)
+			.attr('x2', widthLines - marginLines.left - marginLines.right)
+			.attr('y1', heightLines - 1/2*marginLines.bottom)
+			.attr('y2', heightLines - 1/2*marginLines.bottom)
 			.style('stroke','#777')
 			.style('stroke-width','5');
 
 		svgLines.append('line')
 			.attr('class','filterTime realFilter')				
 			.attr('x1', 0)
-			.attr('x2', widthLines )
-			.attr('y1', heightLines + 1/2*marginLines.bottom)
-			.attr('y2', heightLines + 1/2*marginLines.bottom)
+			.attr('x2', widthLines - marginLines.left - marginLines.right )
+			.attr('y1', heightLines - 1/2*marginLines.bottom)
+			.attr('y2', heightLines - 1/2*marginLines.bottom)
 			.style('stroke','white')
 			.style('stroke-width','5');
 		
-		var filters = [{name:'Limit1', x:0},{name:'Limit2',x:widthLines}];
+		var filters = [{name:'Limit1', x:0},{name:'Limit2',x:widthLines - marginLines.left - marginLines.right}];
 		
 		spheresFilters = svgLines.selectAll('.filterTimeS')
 			.data(filters)
@@ -1129,7 +1172,7 @@
 			.attr('class',d => 'filterTimeS ' + d.name)				
 			.attr('r', 10)
 			.attr('cx', (d,i) => d.x)
-			.attr('cy', heightLines + 1/2*marginLines.bottom)
+			.attr('cy', heightLines - 1/2*marginLines.bottom)
 			.style('stroke','#999')
 			.style('stroke-width','5')
 			.call(d3.drag()
@@ -1142,9 +1185,11 @@
 		  .style('fill', 'white')
 		  .style('font-size', 20)
 		  .style('background', 'black')
-		  .attr('x', widthLines/2-2)
-		  .attr('y', heightLines + marginLines.bottom - 5 )
-		  .style('text-anchor', 'middle')
+		  //.attr('x', (widthLines - marginLines.left - marginLines.right)/2-2)
+		  //attr('y', heightLines - marginLines.bottom/3  )
+		  .attr('x',10)
+		  .attr('y',0 )
+		  .style('text-anchor', 'start')
 		  .html('-');
 
 	});
@@ -1167,7 +1212,7 @@
 
 	function dragged(d) 
 	{
-		d3.select(this).attr("cx", d.x = d3.max([d3.min([d3.event.x,widthLines]),0]));
+		d3.select(this).attr("cx", d.x = d3.max([d3.min([d3.event.x,widthLines - marginLines.left - marginLines.right]),0]));
 		stopAnim = true;
 		filterInTime();
 	}
@@ -1182,8 +1227,8 @@
 		svgLines.select('.realFilter')	
 			.attr('x1', filterDotsmin)
 			.attr('x2', filterDotsmax)
-			.attr('y1', heightLines + 1/2*marginLines.bottom)
-			.attr('y2', heightLines + 1/2*marginLines.bottom);
+			.attr('y1', heightLines - 1/2*marginLines.bottom)
+			.attr('y2', heightLines - 1/2*marginLines.bottom);
 		svgScatter.selectAll('.dot')
 			.filter(d => xScaleLines(timeConv(d.disc_pubdate)) >=filterDotsmin && xScaleLines(timeConv(d.disc_pubdate)) <=filterDotsmax)
 			.style('visibility','visible');
