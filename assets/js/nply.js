@@ -1169,13 +1169,13 @@
 		filterText = svgLines.append('text')
 		  .attr('class', 'yearText')
 		  .style('fill', 'white')
-		  .style('font-size', 20)
+		  .style('font-size', 15)
 		  .style('background', 'black')
-		  //.attr('x', (widthLines - marginLines.left - marginLines.right)/2-2)
-		  //attr('y', heightLines - marginLines.bottom/3  )
-		  .attr('x',10)
-		  .attr('y',0 )
-		  .style('text-anchor', 'start')
+		  .attr('x', (widthLines - marginLines.left - marginLines.right)/2-2)
+		   .attr('y', heightLines- 2/7*marginLines.bottom )
+		  //.attr('x',10)
+		  //.attr('y',0 )
+		  .style('text-anchor', 'middle')
 		  .html('-');
 
 	});
