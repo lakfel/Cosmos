@@ -3,7 +3,10 @@
 	var planetTooltip = d3.select("#infoCardScatter");
 	var methodTooltip = d3.select("#infoCardBars");
 	var exploringSvgScatter = false;
-
+	var filterLimits = {min:"",max:""}
+	var stopAnim = false;
+	var animationInProgress = false;
+	
 	var dragginToolTip = false;
 	var deltaXtt = 0;
 	var deltaYtt = 0;
@@ -309,85 +312,40 @@
 
 	var animation = function()
 	{
-		
+		if(animationInProgress) return;
+		animationInProgress = true;
 		svgScatter.selectAll('.axis')
 				.style('visibility','hidden');
 
 		svgScatter.selectAll('.dot')
-				.style('visibility','hidden');
-
-
-		var solarSystem =  [
-			{"name": "sun", "symbol": "☉",  "color": "#FFFF55", "mass": 1, "r": 400,  "distance": 0, "velocity" : 1},
-            { "name": "mercury", "symbol": "☿", "color": "#D4CCC5", "mass": 0.17, "r":  32, "distance": 10.39 , "velocity" : 88},
-            { "name": "venus",   "symbol": "♀", "color": "#99CC32", "mass": 2.45, "r":  40, "distance": 12.723 , "velocity" : 225},
-            { "name": "earth", "symbol": "♁", "color": "#007FFF", "mass": 3, "r": 43, "distance": 15, "velocity" : 365 },
-            { "name": "mars",    "symbol": "♂", "color": "#FF7700", "mass": 0.32, "r":  46, "distance": 19.524 , "velocity" : 687},
-            { "name": "jupiter", "symbol": "♃", "color": "#D98719", "mass":  955, "r": 277, "distance": 30.203 , "velocity" : 1200},
-            { "name": "saturn",  "symbol": "♄", "color": "#B5A642", "mass":  286, "r": 152, "distance": 50.539 , "velocity" : 1600},
-            { "name": "uranus",  "symbol": "⛢", "color": "#7093DB", "mass":   44, "r": 100, "distance": 65.18 , "velocity" : 1800},
-            { "name": "neptune", "symbol": "♆", "color": "#7093DB", "mass":   52, "r": 95, "distance": 76.06 ,"velocity" : 2000}
-			];		
-		
-		var xSScale = d3.scaleLinear().range([0,widthScatter]);
-		var rSScale = d3.scaleLinear().range([0,widthScatter]);
-		var ySScale = d3.scaleLinear().range([heightScatter,0]);
-		 xSScale.domain([-60,60]);
-		 rSScale.domain([0,8000]);
-		 ySScale.domain([-60,60]);
-
-		
-		svgScatter.select(".xAxisScatter")
-		  //.attr("transform", "translate(0," + yScaleScatter(0) + ")")
-		  .call(xSScale)
-		svgScatter.select(".yAxisScatter")
-		  //.attr("transform", "translate(0," + yScaleScatter(0) + ")")
-		  .call(ySScale)
+				.data([])
+				.style('visibility','hidden')
+				.exit()
+				.remove();
 		svgScatter.selectAll('.solarSystem')
-			.data(solarSystem)
-			.enter()
-			.append('circle')
-			.attr('class','solarSystem')
-			.attr('id', d => d.name)
-			.attr('r', d => rSScale(d.r))
-			.style('fill', d => d.color)
-			.attr('cx', function(d) {
-					d.initialAngle = d3.randomUniform(0, 2)();
-					return xSScale(d.distance*Math.cos(Math.PI*d.initialAngle));
-				})
-			.attr('cy', function(d) {
-					//d.initialAngle = d3.randomUniform(0, 2)();
-					return xSScale(d.distance*Math.sin(Math.PI*d.initialAngle));
-				});
-				
+				.transition()
+				.duration(20)
+				.ease(d3.easeLinear)
+				//.attr('class','solarSystem')
+				//.attr('r', d => d.r)
+				.attr('r', d => rSScale(d.r))
+				.attr('cx', function(d)
+					{
+						return xSScale(d.distance*Math.cos(Math.PI*d.initialAngle));
+					})
+				.attr('cy', function(d)
+					{
+						//d.initialAngle = d3.randomUniform(0, 2)();
+						return xSScale(d.distance*Math.sin(Math.PI*d.initialAngle));
+					})		
+		svgScatter.selectAll('.solarSystem')
+				.style('visibility','visible');
+		
 		svgScatter.selectAll('.solarSystemL')
-			.data(svgScatter.selectAll('.solarSystem').data())
-			.enter()
-			.append('circle')
-			.attr('class','solarSystemL')
-			.attr('r', d =>xSScale(d.distance) -xSScale(0))
-			.attr('cx', d =>xSScale(0))
-			.attr('cy', d =>xSScale(0))
-			.style('fill', 'none')
-			.style('stroke', d=> d.color);
-			/*.attr('x1', function(d) {
-					
-					return xSScale(d.distance*Math.cos(Math.PI*(d.initialAngle -12*2/d.velocity )));
-				})
-			.attr('x2', function(d) {
-					//d.initialAngle = d3.randomUniform(0, 2)();
-					return xSScale(d.distance*Math.cos(Math.PI*d.initialAngle));
-				})
-			.attr('y1', function(d) {
-					
-					return ySScale(d.distance*Math.sin(Math.PI*(d.initialAngle -12*2/d.velocity )));
-				})
-			.attr('y2', function(d) {
-					//d.initialAngle = d3.randomUniform(0, 2)();
-					return ySScale(d.distance*Math.sin(Math.PI*d.initialAngle));
-				})
-			.style('stroke', d => d.color)
-			.style('stroke-width' , d => rSScale(d.r) / 4)*/;
+				.style('visibility','visible');
+
+
+		
 
 		var simDur = 0;
 		var initTicker = d3.interval(e=>{
@@ -476,6 +434,8 @@
 					.call(yAxisScatter);
 				
 				svgScatter.selectAll('.dot').data([]).exit().remove();
+				
+		
 			}
 			if(simDur == 220)
 			{
@@ -494,6 +454,14 @@
 
 	
 	}
+	
+	var animationStop = function()
+	{	
+		year = 2019;
+		month = 01;
+		stopAnim = true;
+	}
+	
 	var animationPart2 = function ()
 	{
 		svgScatter.selectAll('.axis')
@@ -512,12 +480,18 @@
 		tickDuration = 200;
 		var tickMinimum = 400;
 		var thickMaximum = 7000;
+		svgLines.select('.filterTimeS').data().forEach(d=> d.x = xScaleLines(timeConv(year + '-' + month)));
+		svgLines.select('.filterTimeS').attr('cx',d=>d.x);
 		
 		
 		var ticker = d3.interval(e => {
 			
+			
 			svgLines.select('.Limit2').data().forEach(d=> d.x = xScaleLines(timeConv(year + '-' + month)));
 			svgLines.select('.Limit2').attr('cx',d=>d.x);
+			
+			svgLines.select('.realFilter').style('stroke','#E14ECA');
+			
 			filterInTime();
 			// Data of the currente year-month
 			yearSlice = dataBarchart.filter(d => d.yearR == year && !isNaN(d.value) && d.monthnumber == month)
@@ -562,12 +536,21 @@
 				  
 				  
 			// Update - existing barrs
-			bars
-				.transition()
-				  .duration(tickDuration)
-				  .ease(d3.easeLinear)
+			if(!stopAnim)
+			{
+				bars
+					.transition()
+					  .duration(tickDuration)
+					  .ease(d3.easeLinear)
+					  .attr('width', d => xScaleBars(d.value)-xScaleBars(0)-1)
+					  .attr('y', d => yScaleBars(d.rank)+5);
+			}
+			else
+			{
+				bars
 				  .attr('width', d => xScaleBars(d.value)-xScaleBars(0)-1)
-				  .attr('y', d => yScaleBars(d.rank)+5);
+				  .attr('y', d => yScaleBars(d.rank)+5);	
+			}
 			// Exit, when removing bars. Not used here
 			bars
 				.exit()
@@ -599,61 +582,30 @@
 					.attr('y', d => yScaleBars(d.rank)+5+((yScaleBars(1)-yScaleBars(0))/2)+1);
 
 			// Update labels
-			labels
-				.html(d => d.method + '(' + d.value + ')')
-				.transition()
-				.duration(tickDuration)
-					.ease(d3.easeLinear)
+			if(!stopAnim)
+			{
+				labels
+					.html(d => d.method + '(' + d.value + ')')
+					.transition()
+					.duration(tickDuration)
+						.ease(d3.easeLinear)
+						.attr('x', d => xScaleBars(d.value))
+						.attr('y', d => yScaleBars(d.rank)+5+((yScaleBars(1)-yScaleBars(0))/2)+1);
+			}
+			else
+			{
+				labels
+					.html(d => d.method + '(' + d.value + ')')				
 					.attr('x', d => xScaleBars(d.value))
 					.attr('y', d => yScaleBars(d.rank)+5+((yScaleBars(1)-yScaleBars(0))/2)+1);
+				
+			}
 			// Exit labels
 			labels
 				.exit()
-				/*.transition()
-					.duration(tickDuration)
-					.ease(d3.easeLinear)
-					.attr('x', d => xScaleBars(d.value)-8)
-					.attr('y', d => yScaleBars(top_n+1)+5)*/
 					.remove();
 			 
 
-			/*// Getting value labels
-			let valueLabels = svgBar.selectAll('.valueLabel').data(yearSlice, d => d.method);
-		
-			valueLabels
-				.enter()
-				.append('text')
-				.attr('class', 'valueLabel')
-				.attr('x', d => xScaleBars(d.value)+5)
-				.attr('y', d => yScaleBars(top_n+1)+5)
-				.text(d => d3.format(',.0f')(d.lastValue))
-				.transition()
-					.duration(tickDuration)
-					.ease(d3.easeLinear)
-					.attr('y', d => yScaleBars(d.rank)+5+((yScaleBars(1)-yScaleBars(0))/2)+1);
-				
-			valueLabels
-				.transition()
-					.duration(tickDuration)
-					.ease(d3.easeLinear)
-					.attr('x', d => xScaleBars(d.value)+5)
-					.attr('y', d => yScaleBars(d.rank)+5+((yScaleBars(1)-yScaleBars(0))/2)+1)
-					.tween("text", function(d) {
-						let i = d3.interpolateRound(d.lastValue, d.value);
-						return function(t) {
-							this.textContent = d3.format(',')(i(t));
-						};
-					});
-		  
-		 
-			valueLabels
-				.exit()
-				/*.transition()
-					.duration(tickDuration)
-					.ease(d3.easeLinear)
-					.attr('x', d => xScaleBars(d.value)+5)
-					.attr('y', d => yScaleBars(top_n+1)+5)*/
-					/*.remove();*/
 		
 
 			// Linechart animation ----------------------------------------------------------------------------------------------------------
@@ -703,13 +655,22 @@
 				.attr("d", function(d) { return lineGenerator(d.values); })
 
 			// Update - existing barrs
-			lines
-				.select('.linesPath ')
-				.transition()
-				  .duration(tickDuration)
-					.ease(d3.easeLinear)
-					.attr("d", function(d) { return lineGenerator(d.values); })
-					;
+			if(!stopAnim)
+			{
+				lines
+					.select('.linesPath ')
+					.transition()
+					  .duration(tickDuration)
+						.ease(d3.easeLinear)
+						.attr("d", function(d) { return lineGenerator(d.values); })
+						;
+			}
+			else
+			{
+				lines
+					.select('.linesPath ')
+						.attr("d", function(d) { return lineGenerator(d.values); })
+			}
 			// Exit, when removing bars. Not used here
 			lines
 				.exit()
@@ -731,9 +692,10 @@
 				planetsData = dataScatter.filter(d => (d.qym <= year*12 + month) && (d.qym >=12));
 				tope = Math.floor((planetsData.length - prevLen)/10) + 1;
 				prevLen =  planetsData.length;
-				if(tope > 1)
+				if(tope > 20)
 				{
-					console.log(tope);
+					stopAnim = true;
+					counter = tope/2;
 				}
 			}
 			counter +=1;
@@ -785,16 +747,28 @@
 					;
 
 			// Update - existing barrs
-			dots
-				.transition()
-				  .duration(tickDuration)
-					.ease(d3.easeLinear)
-					//.style('fill', 'blue')
+			if(!stopAnim)
+			{
+				dots
+					.transition()
+					  .duration(tickDuration)
+						.ease(d3.easeLinear)
+						//.style('fill', 'blue')
+						.style("stroke", "black")
+						.style('visibility','visible')
+						.attr("r", 2)
+						.attr("cx", xMap)
+						.attr("cy", yMap);
+			}
+			else
+			{
+				dots
 					.style("stroke", "black")
 					.style('visibility','visible')
 					.attr("r", 2)
 					.attr("cx", xMap)
 					.attr("cy", yMap);
+			}
 			// Exit, when removing bars. Not used here
 			dots
 				.exit()
@@ -804,18 +778,28 @@
 				  .ease(d3.easeLinear)*/
 				  .remove();
 			yearText.html(year + '-' + month);
+			
+			
+			if(stopAnim)
+			{
+				counter = 1;
+				tope =1;
+				stopAnim = false;
+			}
 			if(counter >  tope)
 			{
 				counter = 0;
 				month +=1;
-				if(month == 13)
+				if(month >= 13)
 				{
 					month = 1;
 					year++;
 				}
 			}
 
-			if(year == 2020 && month > 10) ticker.stop();
+			if((year == 2020 && month > 10) || year>2020 ) {animationInProgress = false ;
+			svgLines.select('.realFilter').style('stroke','white');
+			ticker.stop()};
 	//     year = d3.format('.1f')((+year) + 0.1);
 	   },tickDuration);
 	}
@@ -1015,7 +999,7 @@
 	// Margins and sizes
 	var marginLines = {top: 20, right: 20, bottom: 90, left: 60},
     widthLines = 700 - marginLines.left - marginLines.right,
-    heightLines = 300 - marginLines.top - marginLines.bottom;
+    heightLines = 400 - marginLines.top - marginLines.bottom;
 	
 	var xScaleLines = d3.scaleTime().range([0,widthLines]);
 	var yScaleLines = d3.scaleLinear().rangeRound([heightLines,0]);
@@ -1163,6 +1147,7 @@
 	function dragged(d) 
 	{
 		d3.select(this).attr("cx", d.x = d3.max([d3.min([d3.event.x,widthLines]),0]));
+		stopAnim = true;
 		filterInTime();
 	}
 
@@ -1170,6 +1155,9 @@
 	{
 		filterDotsmin = d3.min(spheresFilters.data().map(r=>r.x));
 		filterDotsmax = d3.max(spheresFilters.data().map(r=>r.x));
+		var format = d3.timeFormat("%Y-%m");
+		filterLimits.min = format(xScaleLines.invert(filterDotsmin)) ;
+		filterLimits.max = format(xScaleLines.invert(filterDotsmax));
 		svgLines.select('.realFilter')	
 			.attr('x1', filterDotsmin)
 			.attr('x2', filterDotsmax)
@@ -1182,9 +1170,13 @@
 		svgScatter.selectAll('.dot')
 			.filter(d => !(xScaleLines(timeConv(d.disc_pubdate)) >=filterDotsmin && xScaleLines(timeConv(d.disc_pubdate)) <=filterDotsmax))
 			.style('visibility','hidden');
-		var format = d3.timeFormat("%Y-%m");
 		filterText.html(format(xScaleLines.invert(filterDotsmin)) + ' to ' + format(xScaleLines.invert(filterDotsmax)));
 		filterText2.html(format(xScaleLines.invert(filterDotsmin)) + ' to ' + format(xScaleLines.invert(filterDotsmax)));
+		if(stopAnim)
+		{
+			year = parseFloat(format(xScaleLines.invert(filterDotsmax)).substr(0,4));
+			month = parseFloat(format(xScaleLines.invert(filterDotsmax)).substr(5,2));
+		}
 	}
 
 	function dragended(d) {

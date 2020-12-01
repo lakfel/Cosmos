@@ -1,6 +1,10 @@
 // ----------------------------------------------------------  Scatter plot -----------------------------------------------------------------------  //
 // #region scatter
-
+	
+	var xSScale ;
+	var rSScale ;
+	var ySScale ;
+	
 	// ------ Scatter data
 	var dataScatter;
 	// Margins and sizes
@@ -169,53 +173,57 @@
 			.on('click', handleClickDot)
 			.on('mouseover', handleMouseOverDot)
 			.on('mouseout', handleMouseOutDot);// function(d) { return color(cValue(d));}) ;
-		 /* .on("mouseover", function(d) {
-			  tooltip.transition()
-				   .duration(200)
-				   .style("opacity", .9);
-			  tooltip.html(d["Cereal Name"] + "<br/> (" + xValueScatter(d) 
-				+ ", " + yValueScatter(d) + ")")
-				   .style("left", (d3.event.pageX + 5) + "px")
-				   .style("top", (d3.event.pageY - 28) + "px");
-		  })
-		  .on("mouseout", function(d) {
-			  tooltip.transition()
-				   .duration(500)
-				   .style("opacity", 0);
-		  });*/
-	/*	var fisheye = d3.fisheye().radi;
-
-		svgScatter.on("mousemove", function() {
-			fisheye.center(d3.mouse(this));
-			circles.each(function(d) { d.fisheye = fisheye(d); })
-				.attr("cx", function(d) { return d.fisheye.x; })
-				.attr("cy", function(d) { return d.fisheye.y; })
-				.attr("r", function(d) { return 2; });
-		});
 		
-		*/
+		var solarSystem =  [
+			{"name": "sun", "symbol": "☉",  "color": "#FFFF55", "mass": 1, "r": 400,  "distance": 0, "velocity" : 1},
+            { "name": "mercury", "symbol": "☿", "color": "#D4CCC5", "mass": 0.17, "r":  32, "distance": 10.39 , "velocity" : 88},
+            { "name": "venus",   "symbol": "♀", "color": "#99CC32", "mass": 2.45, "r":  40, "distance": 12.723 , "velocity" : 225},
+            { "name": "earth", "symbol": "♁", "color": "#007FFF", "mass": 3, "r": 43, "distance": 15, "velocity" : 365 },
+            { "name": "mars",    "symbol": "♂", "color": "#FF7700", "mass": 0.32, "r":  46, "distance": 19.524 , "velocity" : 687},
+            { "name": "jupiter", "symbol": "♃", "color": "#D98719", "mass":  955, "r": 277, "distance": 30.203 , "velocity" : 1200},
+            { "name": "saturn",  "symbol": "♄", "color": "#B5A642", "mass":  286, "r": 152, "distance": 50.539 , "velocity" : 1600},
+            { "name": "uranus",  "symbol": "⛢", "color": "#7093DB", "mass":   44, "r": 100, "distance": 65.18 , "velocity" : 1800},
+            { "name": "neptune", "symbol": "♆", "color": "#7093DB", "mass":   52, "r": 95, "distance": 76.06 ,"velocity" : 2000}
+			];		
 		
-	  // draw legend
-	  /*var legend = svgScatter.selectAll(".legend")
-		  .data(color.domain())
-		.enter().append("g")
-		  .attr("class", "legend")
-		  .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+		 xSScale = d3.scaleLinear().range([0,widthScatter]);
+		 rSScale = d3.scaleLinear().range([0,widthScatter]);
+		 ySScale = d3.scaleLinear().range([heightScatter,0]);
+		 xSScale.domain([-60,60]);
+		 rSScale.domain([0,8000]);
+		 ySScale.domain([-60,60]);
 
-	  // draw legend colored rectangles
-	  legend.append("rect")
-		  .attr("x", width - 18)
-		  .attr("width", 18)
-		  .attr("height", 18)
-		  .style("fill", color);
-
-	  // draw legend text
-	  legend.append("text")
-		  .attr("x", width - 24)
-		  .attr("y", 9)
-		  .attr("dy", ".35em")
-		  .style("text-anchor", "end")
-		  .text(function(d) { return d;})*/
+	
+		svgScatter.selectAll('.solarSystem')
+			.data(solarSystem)
+			.enter()
+			.append('circle')
+			.attr('class','solarSystem')
+			.attr('id', d => d.name)
+			.attr('r', d => rSScale(d.r))
+			.style('fill', d => d.color)
+			.style('visibility', 'hidden')
+			.attr('cx', function(d) {
+					d.initialAngle = d3.randomUniform(0, 2)();
+					return xSScale(d.distance*Math.cos(Math.PI*d.initialAngle));
+				})
+			.attr('cy', function(d) {
+					//d.initialAngle = d3.randomUniform(0, 2)();
+					return xSScale(d.distance*Math.sin(Math.PI*d.initialAngle));
+				});
+				
+		svgScatter.selectAll('.solarSystemL')
+			.data(svgScatter.selectAll('.solarSystem').data())
+			.enter()
+			.append('circle')
+			.attr('class','solarSystemL')
+			.attr('r', d =>xSScale(d.distance) -xSScale(0))
+			.attr('cx', d =>xSScale(0))
+			.attr('cy', d =>xSScale(0))
+			.style('visibility', 'hidden')
+			.style('fill', 'none')
+			.style('stroke', d=> d.color);
+		
 	});
 
 
