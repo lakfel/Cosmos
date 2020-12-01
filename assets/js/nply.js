@@ -51,6 +51,20 @@
 	var handleClickDot = function(d,i)
 	{
 		
+		var left = parseFloat(d3.select(this).attr('cx')) + 10;
+		var top = parseFloat(d3.select(this).attr('cy')) + 10; 
+		
+		if(left + planetTooltip.node().getBoundingClientRect().width > svgScatter.node().parentNode.getBoundingClientRect().width)
+		{
+			left = svgScatter.node().parentNode.getBoundingClientRect().width  - planetTooltip.node().getBoundingClientRect().width - 20; 
+		}
+		planetTooltip.style('left',left + 'px');
+		
+		if(top + planetTooltip.node().getBoundingClientRect().height > svgScatter.node().parentNode.getBoundingClientRect().height)
+		{
+			top = svgScatter.node().parentNode.getBoundingClientRect().height - planetTooltip.node().getBoundingClientRect().height - 20; 
+		}
+		planetTooltip.style('top',top + 'px');
 		planetTooltip
 				//.style('left',(d3.mouse(this)[0] ) + 'px')
 				//.style('top',(d3.mouse(this)[1] ) + 'px' )
@@ -63,8 +77,8 @@
 				.style("border", "solid")
 				.style("border-width", "4px")
 				.style("border-radius", "5px")
-				.style('left',(d3.select(this).attr('cx') +250 ) + 'px')
-				.style('top',(d3.select(this).attr('cy') + 250 ) + 'px' )
+				//.style('left',(d3.select(this).attr('cx') +250 ) + 'px')
+				//.style('top',(d3.select(this).attr('cy') + 250 ) + 'px' )
 				.style('opacity', 1)
 				//  .call(d3.drag()
 					//.on("start", handleMouseDownToolTip)
