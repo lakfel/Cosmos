@@ -28,9 +28,10 @@
   <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
   <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
   <!-- Nucleo Icons -->
-  <link href="./assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link href="./assets/css/black-dashboard.css?v=1.0.0" rel="stylesheet" />
+
 
   <!-- d3 links -->
   <script src="https://d3js.org/d3.v3.min.js"></script>
@@ -40,109 +41,129 @@
   p{
     font-size: 14px;
   }
+
+
+
+  .bg {
+  /* The image used */
+  background-image: url("./assets/img/bg.jpg");
+
+  /* Full height */
+  height: 100%;
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.top{
+  height: 100px;
+  width: 300px;
+}
+
+
 </style>
 </head>
 
-<body class="">
-  <div class="wrapper">
-    <div class="sidebar">
-    <div class="sidebar-wrapper" data-color="blue">
-      <div class="logo">
-        <a href="#" class="simple-text logo-mini">
-          SI
-        </a>
-        <a href="./index.html" class="simple-text logo-normal">
-          Space Invaders
-        </a>
-      </div>
-      <ul class="nav">
-        <li class="active ">
-          <a href="./index.html">
-            <!-- <i class="tim-icons icon-chart-pie-36"></i> -->
-            <p >Home</p>
-          </a>
-        </li>
-        <li>
-          <a href="./vis1.html">
-            <!-- <i class="tim-icons icon-atom"></i> -->
-            <p>Cosmos</p>
-          </a>
-        </li>
-        <li>
-          <a href="./vis2.html">
-            <!-- <i class="tim-icons icon-pin"></i> -->
-            <p>space Distances</p>
-          </a>
-        </li>
-        <li>
-          <a href="./pages/vis3.html">
-            <!-- <i class="tim-icons icon-bell-55"></i> -->
-            <p>Planetary systems</p>
-          </a>
-        </li>
-        <li>
-          <a href="./pages/info.html">
-            <!-- <i class="tim-icons icon-single-02"></i> -->
-            <p>Explorations</p>
-          </a>
-        </li>
-      </ul>
-    </div>
-    </div>
-    <div class="main-panel ">
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-absolute navbar-transparent">
-        <div class="container-fluid">
-          <div class="navbar-wrapper">
-            <div class="navbar-toggle d-inline">
-              <button type="button" class="navbar-toggler">
-                <span class="navbar-toggler-bar bar1"></span>
-                <span class="navbar-toggler-bar bar2"></span>
-                <span class="navbar-toggler-bar bar3"></span>
-              </button>
+<body class="text-center">
+  <div class="container-fluid">
+        <!-- nav -->
+        <nav class="navbar navbar-expand-lg">
+          <a class="navbar-brand font-weight-bold" href="./index.html">SI</a>
+          <div class="container">
+            <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bar navbar-kebab" ></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav" >
+              <ul class="navbar-nav" style="background-color: black; font-size: 16px;">
+                <li class="nav-item active">
+                  <a class="nav-link" href="./index.html">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="./vis1.html">Facts</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="./vis2.html">Distance</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link " href="./pages/vis3.html">Systems</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link " href="./pages/info.html">Discoveries</a>
+                </li>
+              </ul>
             </div>
           </div>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-expanded="false" aria-label="Toggle navigation">
-            <!-- <span class="navbar-toggler-bar navbar-kebab"></span>
-            <span class="navbar-toggler-bar navbar-kebab"></span>
-            <span class="navbar-toggler-bar navbar-kebab"></span> -->
-          </button>
-        </div>
-      </nav>
-      <!-- End Navbar -->
-      <div class="content">
-        <div class ="row">
-            <div class="col-lg-4 col-md-12 col-sm-12">
-              <!-- left  -->
-              <div class="card" style="min-height:90vh;" id="area">
-                <div class="card-header ">
-                    <div class="col-sm-6 text-left">
-                      <h2 class="card-title">Team</h2>
-                    </div>
-                    <div class="col-sm-6">
-                        <p class="card-title">desription</p>
-                    </div>
-                </div>
-                <div class="card-body">
-                </div>
-              </div>
-              <!--end of left -->
+        </nav>
+        <!-- end of nav -->
+    <div class="main-panel">
+      <div class="wrapper">
+        <div class="main-panel bg" >
+          <div class="top"></div>
+          <div class="row justify-content-md-center" style="height: 150px;">
+            <h1 style="font-size: 70px;font-weight: 400;">Space Invaders</h1>
+          </div>
+          <div class="row text-right">
+            <div class="col-2">
             </div>
-            <div class="col-lg-8 col-md-12 col-sm-12">
-              <div class="">
-              <div class="card" style="min-height:90vh;">
-                <div class="card-header ">
-                  <h6 class="title d-inline">Project</h6>
-                </div>
-                <div class="card-body ">
-                  <div class="chart-area">
-                      decription
-                  </div>
-                </div>
-              </div>
-              <!-- end of vis 1/2 width -->
+            <div class="col-8">
+              <div class="row text-center">
+                <div class="col-4"><h3>Felipe Gonzalez</h3></div>
+                <div class="col-4"><h3>Heba Zahran</h3></div>
+                <div class="col-4"><h3>Jacob Tynski</h3></div>
               </div>
             </div>
+            <div class="col-2">
+            </div>
+          </div>
+
+          <div class="p-4 " style="background-color: #212529;">
+            <div class="row text-right">
+              <div class="col-3">
+              </div>
+              <div class="col-6">
+                <h3>Explore discovered exoplanets over the years
+                </h3>
+              </div>
+              <div class="col-3">
+              </div>
+            </div>
+            <div class="row text-left">
+              <div class="col-3">
+              </div>
+              <div class="col-6">
+                <h3>Compare exoplanet discovery methods over time
+                </h3>
+              </div>
+              <div class="col-3">
+              </div>
+            </div>
+            <div class="row text-left">
+              <div class="col-3">
+              </div>
+              <div class="col-6">
+                <h3>Compare the size of an exoplanet against distance from Earth to moon/mars/pluto
+                </h3>
+              </div>
+              <div class="col-3">
+              </div>
+            </div>
+            <div class="row text-right">
+              <div class="col-3">
+              </div>
+              <div class="col-6">
+                <h3>Look for a specific exoplanet with detailed information
+                </h3>
+              </div>
+              <div class="col-3">
+              </div>
+            </div>
+            <a href="./vis1.html" class="btn btn-primary animation-on-hover mt-2">Explore</a>
+          </div>
         </div>
       </div>
       <footer class="footer">
@@ -159,12 +180,12 @@
     </div>
   </div>
   <!--   Core JS Files   -->
-  <script src="./assets/js/core/jquery.min.js"></script>
-  <script src="./assets/js/core/popper.min.js"></script>
-  <script src="./assets/js/core/bootstrap.min.js"></script>
-  <script src="./assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+  <script src="../assets/js/core/jquery.min.js"></script>
+  <script src="../assets/js/core/popper.min.js"></script>
+  <script src="../assets/js/core/bootstrap.min.js"></script>
+  <script src="../assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
   <!-- Control Center for Black Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="./assets/js/black-dashboard.min.js?v=1.0.0"></script><!-- Black Dashboard DEMO methods, don't include it in your project! -->
+  <script src="../assets/js/black-dashboard.min.js?v=1.0.0"></script><!-- Black Dashboard DEMO methods, don't include it in your project! -->
   <script>
     $(document).ready(function() {
       $().ready(function() {
