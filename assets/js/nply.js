@@ -322,6 +322,8 @@
 		animationInProgress = true;
 		svgScatter.selectAll('.axis')
 				.style('visibility','hidden');
+		svgScatter.selectAll('.scatterLabel')
+				.style('visibility','hidden');
 
 		xSScale.domain([-60,60]);
 		rSScale.domain([0,8000]);
@@ -466,6 +468,9 @@
 
 				svgScatter.selectAll('.solarSystemL')
 						.style('visibility','hidden');
+						
+				svgScatter.selectAll('.scatterLabel')
+						.style('visibility','visible');
 				
 				
 				
@@ -533,6 +538,8 @@
 				.ease(d3.easeLinear)
 				.call(xAxisBars);
 			
+			svgScatter.selectAll('.xAxisScatter>.tick>text')
+				.attr("transform", "rotate(-40)");
 			// Getting bars elements
 			let bars = svgBar.selectAll('.bar').data(yearSlice, d => d.method);
 		
@@ -759,6 +766,23 @@
 				.ease(d3.easeLinear)
 				.attr("transform", "translate(" + xScaleScatter(0) + ",0)")
 				.call(yAxisScatter);
+			
+			svgScatter.select(".scatterXLabel")
+				.transition()
+				.duration(tickDuration)
+				.ease(d3.easeLinear)
+				.attr("y", yScaleScatter(0) )
+				.attr("x", xScaleScatter(limitsScatter.maxX))
+				.attr("dy", "1em");
+				
+			svgScatter.select(".scatterYLabel")
+				.transition()
+				.duration(tickDuration)
+				.ease(d3.easeLinear)
+			  .attr("y", yScaleScatter(limitsScatter.minY))
+			  .attr("x", xScaleScatter(0))
+			   //.attr("transform", "translate("+xScaleScatter(0)+"," + yScaleScatter(limitsScatter.maxY)  + "); rotate(-90)")
+			  .attr("dy", "1em");
 			
 			// Enter - new bars 
 			// TODO maybe start with less bars could have better effect
@@ -1121,7 +1145,8 @@
 			.style('text-anchor', 'end');
 		svgLines.selectAll('.xAxisLines>.tick>text')
 			.attr("transform", "rotate(-40)");
-;
+
+
 		
 		var lines = svgLines.selectAll("lines")
 			.data(dataLines2)

@@ -39,7 +39,7 @@
 		// Applies the x value to the scatter
 		yMap = function(d,i) {
 				return yScaleScatter(yValueScatter(d));},// data -> display
-		yAxisScatter = d3.axisLeft().scale(yScaleScatter);
+		yAxisScatter = d3.axisRight().scale(yScaleScatter);
 
 	// --------- Color
 	// TODO - Sync to barchart 
@@ -156,14 +156,29 @@
 		svgScatter.append("g")
 		  .attr("class", "axis yAxisScatter")
 		  .attr("transform", "translate(" + xScaleScatter(0) + ",0)")
-		  .call(yAxisScatter)
-		.append("text")
-		  .attr("class", "label")
-		  .attr("transform", "rotate(-90)")
-		  .attr("y", 6)
-		  .attr("dy", ".71em")
+		  .call(yAxisScatter);
+		  
+		svgScatter.append("text")
+		  .attr("class", "scatterLabel scatterXLabel")
+		  //attr("transform", "rotate(-90)")
+		  .attr("y", yScaleScatter(0) )
+		  .attr("x", xScaleScatter(limitsScatter.maxX))
+		  .attr("dy", "1em")
 		  .style("text-anchor", "end")
-		  .text("Distance");
+		  .style("fill", "white")
+		  .style("font-size", 8)
+		  .text("Lightyears"); 
+		  
+		svgScatter.append("text")
+		  .attr("class", "scatterLabel scatterYLabel")
+		  .attr("y", yScaleScatter(limitsScatter.minY))
+		  .attr("x", xScaleScatter(0))
+		   //.attr("transform", "translate("+xScaleScatter(0)+"," + yScaleScatter(limitsScatter.maxY)  + "); rotate(-90)")
+		  .attr("dy", "1em")
+		  .style("text-anchor", "end")
+		  .style("fill", "white")
+		  .style("font-size", 8)
+		  .text("Lightyears");
 
 	  // Draw Circules
 	  var circles = svgScatter.selectAll(".dot");
