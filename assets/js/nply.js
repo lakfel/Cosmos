@@ -326,6 +326,11 @@
 		xSScale.domain([-60,60]);
 		rSScale.domain([0,8000]);
 		ySScale.domain([-60,60]);
+		
+		
+		
+		
+		
 		svgScatter.selectAll('.dot')
 				.data([])
 				.style('visibility','hidden')
@@ -1112,7 +1117,7 @@
 			.style('stroke-width','2px');
 		svgLines.selectAll('.axis>.tick>text')
 			.style('color','white')
-			.style("font-size",13)
+			.style("font-size",10)
 			.style('text-anchor', 'end');
 		svgLines.selectAll('.xAxisLines>.tick>text')
 			.attr("transform", "rotate(-40)");
