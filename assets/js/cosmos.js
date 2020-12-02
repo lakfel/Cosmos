@@ -244,7 +244,7 @@
 			 .text(d=>d.name)
 			.style("text-anchor", "end")
 			.style("fill", "white")
-			.style("font-size", 8)
+			.style("font-size", 10)
 			.style('visibility','hidden');
 	
 		svgScatter.selectAll('.labelsLegendDescription')
@@ -260,7 +260,7 @@
 			 .text(d=>d.description)
 			.style("text-anchor", "end")
 			.style("fill", "white")
-			.style("font-size", 8)
+			.style("font-size", 10)
 			.style('visibility','hidden');
 			
 			
@@ -301,7 +301,7 @@
 			.style("fill", "white")
 			.style("text-anchor", "end")
 			.text('lost in the cosmos?')
-			.style("font-size", 9)
+			.style("font-size", 10)
 			.on('mouseover',showHelp)
 			.on('mouseout',hideHelp)
 		svgScatter.append('text')
@@ -311,7 +311,7 @@
 			.style("fill", "white")
 			.style("text-anchor", "end")
 			.text(' Move your mouse here')
-			.style("font-size", 9)
+			.style("font-size", 10)
 			.on('mouseover',showHelp)
 			.on('mouseout',hideHelp)
 		
