@@ -84,7 +84,7 @@
 		var countInQYm = 0;
 		var lastQyM = 0;
 		dataScatter.forEach(function(d) {
-			d.sy_dist = +d.sy_dist; //Distance from Earth
+			d.sy_dist = +d.sy_dist * 3.2616; //Distance from Earth
 			d.ra = +d.ra; // Angle 1 of measurement
 			d.dec = +d.dec; // Angle 2 of measurement
 			d.year = +d.disc_pubdate.substr(0,4) ;
