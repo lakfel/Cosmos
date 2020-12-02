@@ -106,7 +106,7 @@
 		planetTooltip
 				.select('#txtStarMass').html('<u>Mass:</u> ' + d.st_mass + ' times sun mass');
 		planetTooltip
-				.select('#txtStarSize').html('<u>Size: ' + d.st_rad + ' times sun size');
+				.select('#txtStarSize').html('<u>Size:</u>  ' + d.st_rad + ' times sun size');
 		planetTooltip
 				.select('#txtDateDiscovery').html('<u>Discovery date: </u>' + d.disc_pubdate);
 		planetTooltip
