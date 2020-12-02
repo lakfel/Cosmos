@@ -98,7 +98,7 @@
 		planetTooltip
 				.select('#txtPlanetMass').html('<u>Mass:</u> ' +  d.pl_bmasse + ' times the mass of earth');
 		planetTooltip
-				.select('#txtDistanceSystem').html('<u>Distance from earth :</u> ' + d.sy_dist + ' parsecs');
+				.select('#txtDistanceSystem').html('<u>Distance from earth :</u> ' + d.sy_dist + ' lightyears');
 		planetTooltip
 				.select('#txtHostStar').html('<u>Star :</u> ' + d.hostname);
 		planetTooltip
