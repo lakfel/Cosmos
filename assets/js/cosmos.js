@@ -5,10 +5,13 @@
 	var rSScale ;
 	var ySScale ;
 	
+	var helpMap = [{name:'Earth',description:'Our home',sy_dist:0,ra:0,dec:0,r:5,dob:false, c1 : '#007FFF', c2: '#007FFF'},{name:'Sagittarius A',description:'Black hole of milkyway center',sy_dist:26640,dec:-29,ra:266,r:50,dob:true, c1 : 'black', c2 : 'white'}];
+	
+	
 	// ------ Scatter data
 	var dataScatter;
 	// Margins and sizes
-	var marginScatter = {top: 35, right: 20, bottom: 20, left: 20},
+	var marginScatter = {top: 35, right: 20, bottom: 30, left: 20},
     widthScatter = 500 - marginScatter.left - marginScatter.right,
     heightScatter = 400- marginScatter.top - marginScatter.bottom;
 	
@@ -214,7 +217,53 @@
 		 rSScale.domain([0,8000]);
 		 ySScale.domain([-60,60]);
 
+		svgScatter.selectAll('.circlesLegend')
+			.data(helpMap)
+			.enter()
+			.append('circle')
+			.attr('class','legend circlesLegend')
+			.attr('id', d=> 'legCir' + d.name)
+			.attr('r',d => d.r)
+			.attr('cx', xMap)
+			.attr('cy', yMap)
+			.style('fill', d=> d.c1)
+			.style('stroke', d=> d.dob?d.c2:'none')
+			.style('stroke-width',d=> d.dob?4:0)
+			.style('visibility','hidden');
+			
+		svgScatter.selectAll('.labelsLegendName')
+			.data(helpMap)
+			.enter()
+			.append('text')
+			.attr('class','legend labelsLegendName')
+			.attr('id', d=> 'legNam' + d.name)
+			.attr('x',(d,i) => d3.min([limitsScatter.maxX - d.r , xMap(d,i) - d.r]))
+			.attr('y',(d,i) => d3.max([limitsScatter.minY - d.r , yMap(d,i) - d.r]))
+			.attr("dy", "-2em")
+			.attr("dx", "-0.5em")
+			 .text(d=>d.name)
+			.style("text-anchor", "end")
+			.style("fill", "white")
+			.style("font-size", 8)
+			.style('visibility','hidden');
 	
+		svgScatter.selectAll('.labelsLegendDescription')
+			.data(helpMap)
+			.enter()
+			.append('text')
+			.attr('class','legend labelsLegendDescription')
+			.attr('id', d=> 'legNam' + d.name)
+			.attr('x',(d,i) => d3.min([limitsScatter.maxX - d.r , xMap(d,i) - d.r]))
+			.attr('y',(d,i) => d3.max([limitsScatter.minY - d.r , yMap(d,i) - d.r]))
+			.attr("dy", "-1em")
+			.attr("dx", "-0.5em")
+			 .text(d=>d.description)
+			.style("text-anchor", "end")
+			.style("fill", "white")
+			.style("font-size", 8)
+			.style('visibility','hidden');
+			
+			
 		svgScatter.selectAll('.solarSystem')
 			.data(solarSystem)
 			.enter()
@@ -244,9 +293,72 @@
 			.style('visibility', 'hidden')
 			.style('fill', 'none')
 			.style('stroke', d=> d.color);
+			
+		svgScatter.append('text')
+			.attr('x', xScaleScatter(limitsScatter.maxX))
+			.attr('y', yScaleScatter(limitsScatter.minY))
+			.attr("dy", "2em")
+			.style("fill", "white")
+			.style("text-anchor", "end")
+			.text('lost in the cosmos?')
+			.style("font-size", 9)
+			.on('mouseover',showHelp)
+			.on('mouseout',hideHelp)
+		svgScatter.append('text')
+			.attr('x', xScaleScatter(limitsScatter.maxX))
+			.attr('y', yScaleScatter(limitsScatter.minY))
+			.attr("dy", "3em")
+			.style("fill", "white")
+			.style("text-anchor", "end")
+			.text(' Move your mouse here')
+			.style("font-size", 9)
+			.on('mouseover',showHelp)
+			.on('mouseout',hideHelp)
 		
 	});
 
+
+var showHelp = function(d,i)
+{
+		
+		if(animationInProgress2)
+			return;
+		svgScatter.selectAll('.dot')
+			.style('opacity',function(d){ d.prevOp = d3.select(this).style('opacity'); return 0;});
+		
+		svgScatter.selectAll('.circlesLegend')
+			.attr('cx', xMap)
+			.attr('cy', yMap)
+			.style('visibility','visible');
+			
+		svgScatter.selectAll('.labelsLegendName')
+			.attr('x',(d,i) => d3.min([limitsScatter.maxX - d.r , xMap(d,i) - d.r]))
+			.attr('y',(d,i) => d3.max([limitsScatter.minY - d.r , yMap(d,i) - d.r]))
+			.attr("dy", "-2em")
+			.attr("dx", "-0.5em")
+			.style('visibility','visible');
+	
+		svgScatter.selectAll('.labelsLegendDescription')
+			.attr('x',(d,i) => d3.min([limitsScatter.maxX - d.r , xMap(d,i) - d.r]))
+			.attr('y',(d,i) => d3.max([limitsScatter.minY - d.r , yMap(d,i) - d.r]))
+			.attr("dy", "-1em")
+			.attr("dx", "-0.5em")
+			 .text(d=>d.description)
+			.style('visibility','visible');
+}
+
+var hideHelp = function(d,i)
+{
+	
+		
+		svgScatter.selectAll('.dot')
+			.style('opacity', d=> d.prevOp );
+		
+		svgScatter.selectAll('.legend')
+			.style('visibility','hidden');
+		
+			
+}
 
 // #endregion
 // ----------------------------------------------------------  END Scatter plot -----------------------------------------------------------------------  //

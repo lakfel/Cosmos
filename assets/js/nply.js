@@ -7,6 +7,7 @@
 	var filterLimits = {min:"",max:""}
 	var stopAnim = false;
 	var animationInProgress = false;
+	var animationInProgress2 = false;
 	
 	var dragginToolTip = false;
 	var deltaXtt = 0;
@@ -320,6 +321,7 @@
 			return;
 		}
 		animationInProgress = true;
+		animationInProgress2 = true;
 		svgScatter.selectAll('.axis')
 				.style('visibility','hidden');
 		svgScatter.selectAll('.scatterLabel')
@@ -475,6 +477,7 @@
 				
 				
 				d3.select('#btnPlay').attr('class','btn btn-warning').html('Go to year 2020');
+				animationInProgress2 = false;
 				animationPart2();
 			}
 		},30);
