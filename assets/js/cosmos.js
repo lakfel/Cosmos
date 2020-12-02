@@ -149,7 +149,9 @@
 		  //.attr("transform", "translate(0," + ((height)/2 + marginScatter.top) + ")")
 		  .style("text-anchor", "end")
 		  .text("Distance");
-
+		
+		attr.selectAll('.xAxisScatter>.tick>text')
+			.attr("transform", "rotate(-40)");
 	  // y-axis
 		svgScatter.append("g")
 		  .attr("class", "axis yAxisScatter")
