@@ -34,12 +34,61 @@
 
   <!-- d3 links -->
   <script src="https://d3js.org/d3.v3.min.js"></script>
-
+  <script src="./assets/js/cosmos_jacob.js"></script>
 
 <style>
   p{
     font-size: 14px;
   }
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.dot {
+  stroke: #000;
+}
+
+.container{
+  fill: #000;
+  display: flex;
+  justify-content: space-around;
+}
+
+.p_circle {
+  fill: #000;
+
+}
+.p_circleEarth {
+  fill: #008000;
+
+}
+.p_circleMoon {
+  fill: #000;
+
+}
+
+.tooltip {
+  position: absolute;
+  width: 200px;
+  height: 28px;
+  pointer-events: none;
+}
+
+.planetName {
+        color: white;
+        font-size: 16px;
+        line-height: 16px;
+        text-align: center;
+      }
+
+.nameLine
+{
+
+}
 </style>
 </head>
 
@@ -86,29 +135,12 @@
               <div class="card-body ">
                 <form>
                   <div class="form-group">
-                    <label for="exampleFormControlSelect1">Exploration Method</label>
-                    <select class="form-control" id="method">
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                    </select>
+                    <form>
+                      <select class="form-control" id="HostName">
+                      </select>
+                    </form>
                   </div>
-                  <div class="form-group">
-                    <label for="exampleFormControlSelect2">Planets in systems</label>
-                    <select multiple class="form-control" id="planet-num">
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                      <option>6</option>
-                      <option>7</option>
-                      <option>8</option>
-                    </select>
-                  </div>
-                  <a class="btn btn-primary" href="#" role="button">Go</a>
+                  <button class="btn btn-primary" onclick="filterByHostName()">Filter HostName</button>
                 </form>
               </div>
             </div>
@@ -138,17 +170,17 @@
                         <h2 class="card-title">Distance between Earth and Moon</h2>
                       </div>
                       <div class="col-sm-6">
-                          <p class="card-title">desription</p>
+                          <p class="card-title">What other solar system's planets would fit between Earth and the Moon? Green dot is Earth and the black is our Moon</p>
                       </div>
                   </div>
                   <div class="card-body">
                     <!-- temp -->
                     <div class="top"></div>
                     <div class="row justify-content-md-center" style="height: 150px;">
-                      <h1 style="font-size: 70px;font-weight: 400;">Under Construction</h1>
+                      <h1 style="font-size: 70px;font-weight: 400;"></h1>
                     </div>
                     <!-- temp -->
-                      <!-- <svg id="Cosmos2"></svg> -->
+                    <svg id="Cosmos1"></svg>
                   </div>
                 </div>
                 <!--end of  vis-->
