@@ -82,16 +82,16 @@
             <div class="modal-content-full-width modal-content ">
                 <div class=" modal-header text-center">
                     <h3 class="modal-title w-100" id="exampleModalPreviewLabel">Cosmos Map</h3>
-                    <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close " onclick = "changeToNormalView()" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                   <div class="">
                     <!-- cosmos map -->
-                    <div class="card-body">
-                      <svg id="SvgScatter">
-                      </svg>
+                    <div id="modalView" class="card-body">
+                      <!--svg id="SvgScatter">
+                      </svg-->
                     </div>
                     <!-- end of cosmos map -->
                     <!-- animate button -->
@@ -134,7 +134,7 @@
                   </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn-simple" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-simple" onclick = "changeToNormalView()"  data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -181,7 +181,7 @@
                         <!-- end of Hits button -->
 
                         <!-- Button to view full width modal -->
-                        <button id="modalActivate" type="button" class="btn btn-primary btn-link" data-toggle="modal" data-target="#exampleModalPreview">
+                        <button id="modalActivate" type="button" onclick= "changeToModalView()" class="btn btn-primary btn-link" data-toggle="modal" data-target="#exampleModalPreview">
                           <i class="fas fa-expand fa-2x"></i>
                         </button>
                         <!-- end Button of full width modal  -->
@@ -214,7 +214,7 @@
                     </div>
                   </div>
                   <!-- cosmos map -->
-                  <div class="card-body">
+                  <div id  = "normalView"class="card-body">
                       <svg id="SvgScatter">
                       </svg>
                   </div>

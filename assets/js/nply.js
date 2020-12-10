@@ -323,17 +323,44 @@
 		animationInProgress = true;
 		animationInProgress2 = true;
 		svgScatter.selectAll('.axis')
+				.style('opacity',0)
 				.style('visibility','hidden');
 		svgScatter.selectAll('.scatterLabel')
 				.style('visibility','hidden');
-
-		xSScale.domain([-60,60]);
-		rSScale.domain([0,8000]);
-		ySScale.domain([-60,60]);
+	
+		var divisor = 1/4;
+	
+		xSScale.domain([-60*divisor,60*divisor]);
+		rSScale.domain([0,8000*divisor]);
+		ySScale.domain([-60*divisor,60*divisor]);
 		
 		
-		
-		
+		var lineHint = svgScatter
+						.append('line')
+						.attr('id','lineHint')
+						.attr('x1',xSScale(0))
+						.attr('x2',xSScale(0))
+						.attr('y1',ySScale(0))
+						.attr('y2',ySScale(0))
+						.attr('stroke','white')
+						.attr('stroke-width','2px')
+						.style('visibility','hidden' );
+		var textHint = svgScatter
+						.append('text')
+						.attr('id','textHint')
+						.style('color','white')
+						.attr("dy", "-1em")
+						.style("font-size",11)
+						.style('fill','white')
+						.style("text-anchor", "start")
+						.text('')
+						.style('visibility','hidden' );
+		var rectangleHint = svgScatter
+						.append('rect')
+						.attr('id','rectHint')
+						.style('fill','black')
+						.style('visibility','hidden' );
+			
 		
 		svgScatter.selectAll('.dot')
 				.data([])
@@ -346,56 +373,306 @@
 				.attr('r', d => rSScale(d.r))
 				.attr('cx', function(d)
 					{
-						return xSScale(d.distance*Math.cos(Math.PI*d.initialAngle));
+						return ySScale(d.distance*Math.cos(Math.PI*d.initialAngle)) - ySScale(0) + xSScale(0);
 					})
 				.attr('cy', function(d)
 					{
 						//d.initialAngle = d3.randomUniform(0, 2)();
-						return xSScale(d.distance*Math.sin(Math.PI*d.initialAngle));
+						return ySScale(d.distance*Math.sin(Math.PI*d.initialAngle));
 					});
 		svgScatter.selectAll('.solarSystemL')
-			.attr('r', d =>xSScale(d.distance) -xSScale(0))
+			.attr('r', d =>ySScale(-d.distance) -ySScale(0))
 			.attr('cx', d =>xSScale(0))
-			.attr('cy', d =>xSScale(0));
+			.attr('cy', d =>ySScale(0));
+			
+	    svgScatter.selectAll('.solarSystemT')
+			.attr('x', function(d,i) {
+					//d.initialAngle = d3.randomUniform(0, 2)();
+					//if(i==0) return xSScale(0); else
+					return ySScale(d.distance*Math.cos(Math.PI*d.initialAngle)) - ySScale(0) + xSScale(0);// - rSScale(d.r);
+				})
+			.attr('y', function(d,i) {
+					//d.initialAngle = d3.randomUniform(0, 2)();
+					//if(i==0) return ySScale(0); else
+					return ySScale(d.distance*Math.sin(Math.PI*d.initialAngle)) - rSScale(d.r);
+				});
+		
 		svgScatter.selectAll('.solarSystem')
-				.style('visibility','visible');
+				.style('visibility',(d,i)=> i <=3? 'visible':'hidden');
 		
 		svgScatter.selectAll('.solarSystemL')
-				.style('visibility','visible');
+				.style('visibility',(d,i)=> i <= 3? 'visible':'hidden');
+				
+		svgScatter.selectAll('.solarSystemT')
+				.style('visibility',(d,i)=> i <= 3? 'visible':'hidden');
+				
+		svgScatter.selectAll('.dot').data([]).exit().remove();
 
 
 		
 
 		var simDur = 0;
+		var middleInterval = 0;
+		var tickInt = 45;
+		var steps = 0;
 		var initTicker = d3.interval(e=>{
 			svgScatter.selectAll('.solarSystem')
 				.transition()
-				.duration(20)
+				.duration(tickInt)
 				.ease(d3.easeLinear)
 				//.attr('class','solarSystem')
 				//.attr('r', d => d.r)
 				.attr('r', d => rSScale(d.r))
 				.attr('cx', function(d)
 					{
-						d.initialAngle +=  2*2/d.velocity;
-						return xSScale(d.distance*Math.cos(Math.PI*d.initialAngle));
+						d.initialAngle +=  2*1.5/d.velocity;
+						return ySScale(d.distance*Math.cos(Math.PI*d.initialAngle))  - ySScale(0) + xSScale(0);
 					})
 				.attr('cy', function(d)
 					{
 						//d.initialAngle = d3.randomUniform(0, 2)();
-						return xSScale(d.distance*Math.sin(Math.PI*d.initialAngle));
+						return ySScale(d.distance*Math.sin(Math.PI*d.initialAngle));
 					})
 			.style('opacity', (220-simDur)/220);
 					
 		
 		svgScatter.selectAll('.solarSystemL')
 			.transition()
-			.duration(30)
+			.duration(tickInt)
 			.ease(d3.easeLinear)
-			.attr('r', d =>xSScale(d.distance)-xSScale(0))
+			.attr('r', d =>ySScale(-d.distance)-ySScale(0))
 			.attr('cx', d =>xSScale(0))
-			.attr('cy', d =>xSScale(0))
+			.attr('cy', d =>ySScale(0))
 			.style('opacity', (220-simDur)/220);
+		
+		 svgScatter.selectAll('.solarSystemT')
+			.transition()
+			.duration(tickInt)
+			.ease(d3.easeLinear)
+			.attr('x', function(d,i) {
+					//if(i==0) return xSScale(0); else
+					return ySScale(d.distance*Math.cos(Math.PI*d.initialAngle)) - ySScale(0) + xSScale(0) ;//- rSScale(d.r);
+				})
+			.attr('y', function(d,i) {
+					//d.initialAngle = d3.randomUniform(0, 2)();
+					//if(i==0) return ySScale(0); else
+					return ySScale(d.distance*Math.sin(Math.PI*d.initialAngle)) - rSScale(d.r)
+				});
+			
+			if(simDur == 10)
+			{
+				if (steps == 0)
+				{
+					lineHint
+						.attr('x1',ySScale(0))
+						.attr('x2',ySScale(0))
+						.attr('y1',ySScale(0))
+						.attr('y2',ySScale(0))
+						//.attr('y1',10+marginScatter.top)
+						//.attr('y2',10+marginScatter.top)
+						.style('visibility','visible')
+						.raise();
+					textHint
+						.attr('x', xSScale(0))
+						.attr('y', ySScale(0))
+						.text('Distance Sun-earth = 8 ligth minutes')
+						.style('visibility','visible')
+						.style('opacity',0)
+						.style('background-color','black')
+						.style("text-anchor", "start")
+						.raise();
+					
+					rectangleHint
+						.attr('x',xSScale(0))
+						.attr('y', ySScale(0) - 20)
+						.style('visibility','visible')
+						.style('opacity',0)
+						.style('background-color','black')
+						.attr("width",  1)
+						.attr("height", 30);
+						
+					middleInterval = 80;
+					steps = 1;
+				}
+				lineHint
+					.transition()
+					.duration(tickInt)
+					.ease(d3.easeLinear)
+					.attr('x1',xSScale(0))
+					.attr('x2',(ySScale(-15*d3.min([(80 -middleInterval)/30,1])) - ySScale(0))  + xSScale(0)  )
+				    .style('visibility','visible');
+				textHint
+					.transition()
+					.duration(tickInt)
+					.ease(d3.easeLinear)
+					.style('opacity', d3.min([(80 -middleInterval)/30,1]))
+				    .style('visibility','visible');
+				rectangleHint
+					.transition()
+					.duration(tickInt)
+					.ease(d3.easeLinear)
+					.attr('width',(ySScale(-15*d3.min([(80 -middleInterval)/30,1]))  - ySScale(0))   + xSScale(0)  )
+					.style('opacity', d3.min([(80 -middleInterval)/30,0.75]))
+				    .style('visibility','visible');
+				
+			}	
+			if(simDur == 20)
+			{
+				if (steps == 1)
+				{	
+					lineHint
+						.transition()
+						.duration(tickInt)
+						.ease(d3.easeLinear)
+						.attr('x1',xSScale(0))
+						.attr('x2',xSScale(0) )
+						.style('visibility','hidden');
+					textHint
+						.transition()
+						.duration(tickInt)
+						.ease(d3.easeLinear)
+						.text('')
+						.style("text-anchor", "start")
+						.style('opacity', d3.min([7/middleInterval,1]))
+						.style('visibility','hidden');
+					rectangleHint
+						.transition()
+						.duration(tickInt)
+						.ease(d3.easeLinear)
+						.attr('width',0 )
+						.style('opacity', 0)
+						.style('visibility','hidden');
+					svgScatter.selectAll('.solarSystem')
+							.transition()
+							.duration(tickInt)
+							.ease(d3.easeLinear)
+							.style('visibility', 'visible')
+							.style('opacity', 1);
+							
+					
+					svgScatter.selectAll('.solarSystemL')
+							.transition()
+							.duration(tickInt)
+							.ease(d3.easeLinear)
+							.style('visibility', 'visible')
+							.style('opacity', 1);
+							
+					svgScatter.selectAll('.solarSystemT')
+							.transition()
+							.duration(tickInt)
+							.ease(d3.easeLinear)
+							.style('visibility', 'visible')
+							.style('opacity', 1);
+					
+					middleInterval = 4;
+					steps = 2;
+				}
+				if(middleInterval == 0)
+					divisor=1;
+				else
+					divisor = 1/middleInterval;
+	
+				xSScale.domain([-60*divisor,60*divisor]);
+				rSScale.domain([0,8000*divisor]);
+				ySScale.domain([-60*divisor,60*divisor]);
+				
+				
+			}
+			if(simDur == 30)
+			{
+				if (steps == 2)
+				{
+					lineHint
+						.attr('x1',ySScale(0))
+						.attr('x2',ySScale(0))
+						.attr('y1',ySScale(0))
+						.attr('y2',ySScale(0))
+						//.attr('y1',10+marginScatter.top)
+						//.attr('y2',10+marginScatter.top)
+						.style('visibility','visible')
+						.raise();
+					textHint
+						.attr('x', xSScale(0))
+						.attr('y', ySScale(0))
+						.style('visibility','visible')
+						.style('opacity',0)
+						.style("text-anchor", "start")
+						.style('background-color','black')
+						.raise();
+					
+					rectangleHint
+						.attr('x',xSScale(0))
+						.attr('y', ySScale(0) - 20)
+						.style('visibility','visible')
+						.style('opacity',0)
+						.style('background-color','black')
+						.attr("width",  1)
+						.attr("height", 30);
+						
+					middleInterval = 80;
+					steps = 3;
+				}
+				lineHint
+					.transition()
+					.duration(tickInt)
+					.ease(d3.easeLinear)
+					.attr('x1',xSScale(0))
+					.attr('x2',(ySScale(-76*d3.min([(80 -middleInterval)/30,1])) - ySScale(0))  + xSScale(0)  )
+				    .style('visibility','visible');
+				textHint
+					.transition()
+					.duration(tickInt)
+					.ease(d3.easeLinear)
+					.text('Distance Sun-neptune = 4 ligth hours')
+					.style('opacity', d3.min([(80 -middleInterval)/30,1]))
+				    .style('visibility','visible');
+				rectangleHint
+					.transition()
+					.duration(tickInt)
+					.ease(d3.easeLinear)
+					.attr('width',(ySScale(-76*d3.min([(80 -middleInterval)/30,1]))  - ySScale(0))   + xSScale(0)  )
+					.style('opacity', d3.min([(80 -middleInterval)/30,0.75]))
+				    .style('visibility','visible');
+				
+			}	
+			if(simDur == 40)
+			{
+				
+					lineHint
+						.transition()
+						.duration(tickInt)
+						.ease(d3.easeLinear)
+						.attr('x1',xSScale(0))
+						.attr('x2',xSScale(0) )
+						.style('visibility','hidden');
+					textHint
+						.transition()
+						.duration(tickInt)
+						.ease(d3.easeLinear)
+						.attr('x',xSScale(0))
+						.attr('y',ySScale(0))
+						.text('')
+						.style('opacity', d3.min([7/middleInterval,1]))
+						.style('visibility','hidden');
+					rectangleHint
+						.transition()
+						.duration(tickInt)
+						.ease(d3.easeLinear)
+						.attr('width',0 )
+						.style('opacity', 0)
+						.style('visibility','hidden');
+						
+					 svgScatter.selectAll('.solarSystemT')
+						.transition()
+						.duration(tickInt)
+						.ease(d3.easeLinear)
+						.attr('width',0 )
+						.style('opacity', 0)
+						.style('visibility','hidden');
+				
+				
+				
+			}
 			
 			if(simDur > 80)
 			{
@@ -409,31 +686,29 @@
 				  //.attr("transform", "translate(0," + yScaleScatter(0) + ")")
 				  .call(ySScale)
 			}
-			simDur +=1;
-			if(simDur >= 180 && simDur <= 184)
+			if(simDur >= 180 && simDur <= 194)
 			{
-				xScaleScatter.domain([-limitsScatter.maxX, limitsScatter.maxX]);
-				yScaleScatter.domain([limitsScatter.minY, limitsScatter.maxY]);
+				xScaleScatter.domain([-1, 1]);
+				yScaleScatter.domain([-1, 1]);
 				
 				svgScatter.selectAll('.axis')
-						.style('opacity',0)
-						.style('visibility','visible');
+				//		.style('opacity',0)
+				        .style('visibility','visible');
 				svgScatter.select('.xAxisScatter')
 						.transition()
-						.duration(30)
+						.duration(tickInt)
 						.ease(d3.easeLinear)
-					.attr("transform", "translate(0," + xScaleScatter(0) + ")")
-						.style('opacity', (simDur - 179)/5)
+					.attr("transform", "translate(0," + ySScale(0) + ")")
+						.style('opacity', (simDur - 179)/15)
 					.call(xAxisScatter);
 				svgScatter.select('.yAxisScatter')
 						.transition()
-						.duration(30)
+						.duration(tickInt)
 						.ease(d3.easeLinear)
-						.style('opacity',(simDur - 179)/5)
-					.attr("transform", "translate(" + xScaleScatter(0) + ",0)")
+						.style('opacity',(simDur - 179)/15)
+					.attr("transform", "translate(" + xSScale(0) + ",0)")
 					.call(yAxisScatter);
 				
-				svgScatter.selectAll('.dot').data([]).exit().remove();
 				
 		
 			}
@@ -447,15 +722,15 @@
 				
 				svgScatter.select('.xAxisScatter')
 						.transition()
-						.duration(30)
+						.duration(tickInt)
 						.ease(d3.easeLinear)
-					.attr("transform", "translate(0," + xScaleScatter(0) + ")")
+					//.attr("transform", "translate(0," + xScaleScatter(0) + ")")
 					.call(xAxisScatter);
 				svgScatter.select('.yAxisScatter')
 						.transition()
-						.duration(30)
+						.duration(tickInt)
 						.ease(d3.easeLinear)
-					.attr("transform", "translate(" + yScaleScatter(0) + ",0)")
+					//attr("transform", "translate(" + yScaleScatter(0) + ",0)")
 					.call(yAxisScatter);
 				
 				svgScatter.selectAll('.dot').data([]).exit().remove();
@@ -480,7 +755,11 @@
 				animationInProgress2 = false;
 				animationPart2();
 			}
-		},30);
+			if(middleInterval <=0)
+				simDur +=1;
+			else
+				middleInterval -=1;
+		},tickInt);
 
 	
 	}
@@ -507,7 +786,7 @@
 		var counter = 0;
 		var tope = 0;
 		var prevLen = 0;
-		tickDuration = 200;
+		tickDuration = 150;
 		var tickMinimum = 400;
 		var thickMaximum = 7000;
 		svgLines.select('.filterTimeS').data().forEach(d=> d.x = xScaleLines(timeConv(year + '-' + month)));
@@ -1234,6 +1513,9 @@
 		d3.select(this).attr("cx", d.x = d3.max([d3.min([d3.event.x,widthLines - marginLines.left - marginLines.right]),0]));
 		stopAnim = true;
 		filterInTime();
+		var tickInt = 45;
+		var steps = 0;
+		
 	}
 
 	function filterInTime()

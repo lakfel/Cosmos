@@ -1,6 +1,10 @@
 // ----------------------------------------------------------  Scatter plot -----------------------------------------------------------------------  //
 // #region scatter
 	
+	var modalParent;
+	var normalParent;
+	var svgParent;
+	
 	var xSScale ;
 	var rSScale ;
 	var ySScale ;
@@ -58,24 +62,62 @@
 		.style("opacity", 0);
 
 	
+	var changeToModalView = function ()
+	{
+		//svgParent.remove();
+		//modalParent.append(svgParent.node());
+		$("#SvgScatter").appendTo("#modalView")
+		svgParent
+			//.attr("width", widthScatter + marginScatter.left + marginScatter.right)
+			//.attr("height", heightScatter + marginScatter.top + marginScatter.bottom) 
+			.attr('width', '95%')
+			.attr('height', '95%')
+			.attr('viewBox','0 0 '+ screen.width*0.6 +' '+screen.height*0.6)
+			//.attr('viewBox','0 0 '+Math.min(widthScatter,heightScatter)+' '+Math.min(widthScatter,heightScatter))
+			//.attr('viewBox','0 0 '+ widthScatter +' '+ heightScatter )
+		//	.attr('viewBox','0 0 '+ widthScatter +' '+heightScatter)
+			//.attr('preserveAspectRatio','xMidYMid meet')
+	}
+	var changeToNormalView = function ()
+	{
+		//svgParent.remove();
+		//modalParent.append(svgParent.node());
+		$("#SvgScatter").appendTo("#normalView")
+		svgParent
+			.attr('viewBox','0 0 '+ screen.width*0.4 +' '+screen.height*0.4);
+		/*	//.attr("width", widthScatter + marginScatter.left + marginScatter.right)
+			//.attr("height", heightScatter + marginScatter.top + marginScatter.bottom) 
+			.attr('width', '95%')
+			.attr('height', '95%')
+			//.attr('viewBox','0 0 '+Math.min(widthScatter,heightScatter)+' '+Math.min(widthScatter,heightScatter))
+			//.attr('viewBox','0 0 '+ widthScatter +' '+ heightScatter )
+			.attr('viewBox','0 0 '+ widthScatter +' '+heightScatter)*/
+	}
+	
 	//----------- Load data and initial VIZ
 	d3.csv("./data/data.csv").then(function( data) 
 	{
+		normalParent = d3.select('#normalView');
+		modalParent = d3.select('#modalView');
+		
 		dataScatter = data;
-		svgScatter = d3.select("#SvgScatter")
+		svgParent = d3.select("#SvgScatter")
 			//.attr("width", widthScatter + marginScatter.left + marginScatter.right)
 			//.attr("height", heightScatter + marginScatter.top + marginScatter.bottom) 
 			.attr('width', '95%')
 			.attr('height', '95%')
 			//.attr('viewBox','0 0 '+Math.min(widthScatter,heightScatter)+' '+Math.min(widthScatter,heightScatter))
 			//.attr('viewBox','0 0 '+ widthScatter +' '+ heightScatter )
-			.attr('viewBox','0 0 '+ widthScatter +' '+heightScatter)
-			.attr('preserveAspectRatio','xMinYMin')
-			//.append(“svg”)
+			//.attr('viewBox','0 0 '+ widthScatter +' '+heightScatter)
+
+			.attr('viewBox','0 0 '+ screen.width*0.4 +' '+screen.height*0.4)
+			.attr('preserveAspectRatio','xMinYMin meet')
+			//.attr('max-height','100px')
 			.on("wheel", onWheel)
-			.on("mouseover",handleMouseMoveInSvgScatter)
+			.on("mouseover",handleMouseMoveInSvgScatter);
 			//.on("mouseover",handleMouseOverSvgScatter)
 			//.on("mouseout",handleMouseMoveOutSvgScatter)
+		svgScatter = svgParent
 		  .append("g")
 			//.attr('transform', 'translate(' + Math.min(widthScatter,heightScatter) / 2 + ','+ Math.min(widthScatter,heightScatter) / 2 + ')')
 			.attr("transform", "translate(" + marginScatter.left + "," + marginScatter.top + ")");
@@ -108,7 +150,7 @@
 			{
 				countInQYm = 0;
 				lastQyM = d.qym;
-			}
+			}	
 			countInQYm += 1;
 			d.filterTime = countInQYm;
 		  });
@@ -211,7 +253,7 @@
 			];		
 		
 		 xSScale = d3.scaleLinear().range([0,widthScatter - marginScatter.left - marginScatter.right]);
-		 rSScale = d3.scaleLinear().range([0,widthScatter]);
+		 rSScale = d3.scaleLinear().range([0,heightScatter]);
 		 ySScale = d3.scaleLinear().range([heightScatter - marginScatter.top - marginScatter.bottom , 0]);
 		 xSScale.domain([-60,60]);
 		 rSScale.domain([0,8000]);
@@ -275,24 +317,44 @@
 			.style('visibility', 'hidden')
 			.attr('cx', function(d) {
 					d.initialAngle = d3.randomUniform(0, 2)();
-					return xSScale(d.distance*Math.cos(Math.PI*d.initialAngle));
+					return ySScale(d.distance*Math.cos(Math.PI*d.initialAngle));
 				})
 			.attr('cy', function(d) {
 					//d.initialAngle = d3.randomUniform(0, 2)();
-					return xSScale(d.distance*Math.sin(Math.PI*d.initialAngle));
+					return ySScale(d.distance*Math.sin(Math.PI*d.initialAngle));
 				});
 				
 		svgScatter.selectAll('.solarSystemL')
-			.data(svgScatter.selectAll('.solarSystem').data())
+			.data(solarSystem)
 			.enter()
 			.append('circle')
 			.attr('class','solarSystemL')
-			.attr('r', d =>xSScale(d.distance) -xSScale(0))
-			.attr('cx', d =>xSScale(0))
-			.attr('cy', d =>xSScale(0))
+			.attr('r', d =>ySScale(d.distance) -ySScale(0))
+			.attr('cx', d =>ySScale(0))
+			.attr('cy', d =>ySScale(0))
 			.style('visibility', 'hidden')
 			.style('fill', 'none')
-			.style('stroke', d=> d.color);
+			.style('stroke', d=> d.color);	
+			
+		svgScatter.selectAll('.solarSystemT')
+			.data(solarSystem)
+			.enter()
+			.append('text')
+			.attr('class','solarSystemT')
+			.attr('x', function(d) {
+					d.initialAngle = d3.randomUniform(0, 2)();
+					return ySScale(d.distance*Math.cos(Math.PI*d.initialAngle)) - rSScale(d.r);
+				})
+			.attr('y', function(d) {
+					//d.initialAngle = d3.randomUniform(0, 2)();
+					return ySScale(d.distance*Math.sin(Math.PI*d.initialAngle)) - rSScale(d.r);
+				})
+			.attr("dy", "-1em")
+			.style("fill", "white")
+			.style("text-anchor", "end")
+			.text(d => d.name)
+			.style("font-size", 10)
+			.style('visibility', 'hidden');
 			
 		svgScatter.append('text')
 			.attr('x', xScaleScatter(limitsScatter.maxX))
@@ -314,6 +376,9 @@
 			.style("font-size", 10)
 			.on('mouseover',showHelp)
 			.on('mouseout',hideHelp)
+			
+			
+		
 		
 	});
 
