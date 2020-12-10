@@ -15,7 +15,7 @@
 	// ------ Scatter data
 	var dataScatter;
 	// Margins and sizes
-	var marginScatter = {top: 35, right: 20, bottom: 30, left: 20},
+	var marginScatter = {top: 35, right: 20, bottom: 50, left: 20},
     widthScatter = 500 - marginScatter.left - marginScatter.right,
     heightScatter = 400- marginScatter.top - marginScatter.bottom;
 	
