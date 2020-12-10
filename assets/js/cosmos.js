@@ -66,6 +66,8 @@
 	{
 		//svgParent.remove();
 		//modalParent.append(svgParent.node());
+		$("#infoCardScatter").appendTo("#modalView")
+
 		$("#SvgScatter").appendTo("#modalView")
 		svgParent
 			//.attr("width", widthScatter + marginScatter.left + marginScatter.right)
@@ -82,6 +84,7 @@
 	{
 		//svgParent.remove();
 		//modalParent.append(svgParent.node());
+		$("#infoCardScatter").appendTo("#normalView")
 		$("#SvgScatter").appendTo("#normalView")
 		svgParent
 			.attr('viewBox','0 0 '+ screen.width*0.4 +' '+screen.height*0.4);

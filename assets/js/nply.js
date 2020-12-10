@@ -64,12 +64,12 @@
 			left = svgScatter.node().parentNode.getBoundingClientRect().width  - planetTooltip.node().getBoundingClientRect().width - 20; 
 		}
 		planetTooltip.style('left',left + 'px');
-		
-		if(top + planetTooltip.node().getBoundingClientRect().height > svgScatter.node().parentNode.getBoundingClientRect().height)
+		/*f(top + planetTooltip.node().getBoundingClientRect().height > svgScatter.node().parentNode.getBoundingClientRect().height)
 		{
 			top = svgScatter.node().parentNode.getBoundingClientRect().height - planetTooltip.node().getBoundingClientRect().height - 20; 
-		}
+		}*/
 		planetTooltip.style('top',top + 'px');
+		planetTooltip.raise();
 		planetTooltip
 				//.style('left',(d3.mouse(this)[0] ) + 'px')
 				//.style('top',(d3.mouse(this)[1] ) + 'px' )
