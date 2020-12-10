@@ -751,7 +751,7 @@
 				
 				
 				
-				d3.select('#btnPlay').attr('class','btn btn-warning').html('Go to year 2020');
+				d3.selectAll('.animateBtn').attr('class','btn btn-warning animateBtn').html('Go to year 2020');
 				animationInProgress2 = false;
 				animationPart2();
 			}
@@ -1141,7 +1141,7 @@
 
 			if((year == 2020 && month > 10) || year>2020 ) {animationInProgress = false ;
 			svgLines.select('.realFilter').style('stroke','white');
-			d3.select('#btnPlay').attr('class','btn btn-neutral').html('Animate');
+			d3.selectAll('.animateBtn').attr('class','btn btn-neutral animateBtn').html('Animate');
 			ticker.stop()};
 	//     year = d3.format('.1f')((+year) + 0.1);
 	   },tickDuration);
