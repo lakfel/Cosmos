@@ -31,6 +31,7 @@
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link href="./assets/css/black-dashboard.css?v=1.0.0" rel="stylesheet" />
+  <link href="./assets/css/cosmos.css" rel="stylesheet" />
 
 
   <!-- d3 links -->
@@ -69,7 +70,7 @@
 <body class="text-center">
   <div class="container-fluid">
         <!-- nav -->
-        <nav class="navbar navbar-expand-lg">
+        <nav class="navbar navbar-expand-lg bg-dark" style="background-color: #1a1e34; font-size: 16px;">
           <a class="navbar-brand font-weight-bold" href="./index.html">SI</a>
           <div class="container">
             <!-- <a class="navbar-brand" href="#">Navbar</a> -->
@@ -79,21 +80,21 @@
             <span class="navbar-toggler-bar navbar-kebab"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav" >
-              <ul class="navbar-nav" style="background-color: black; font-size: 16px;">
+              <ul class="navbar-nav" >
                 <li class="nav-item active">
-                  <a class="nav-link" href="./index.html">Home <span class="sr-only">(current)</span></a>
+                  <a class="nav-link" href="./index.html" style="color: white !important;">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="./vis1.html">Facts</a>
+                  <a class="nav-link" href="./vis1.html" style="color: white !important;">Facts</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="./vis2.html">Distance</a>
+                  <a class="nav-link" href="./vis2.html" style="color: white !important;">Distance</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link " href="./pages/vis3.html">Systems</a>
+                  <a class="nav-link " href="./pages/vis3.html" style="color: white !important;">Systems</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link " href="./pages/info.html">Discoveries</a>
+                  <a class="nav-link " href="./pages/info.html" style="color: white !important;">Discoveries</a>
                 </li>
               </ul>
             </div>
@@ -107,7 +108,7 @@
           <div class="row justify-content-md-center" style="height: 150px;">
             <h1 style="font-size: 70px;font-weight: 400;">Space Invaders</h1>
           </div>
-          <div class="row text-right">
+          <div class="row">
             <div class="col-2">
             </div>
             <div class="col-8">
@@ -121,51 +122,34 @@
             </div>
           </div>
 
-          <div class="p-4 " style="background-color: #212529;">
-            <div class="row text-right">
-              <div class="col-3">
-              </div>
-              <div class="col-6">
-                <h3>Explore discovered exoplanets over the years
-                </h3>
-              </div>
-              <div class="col-3">
-              </div>
+          <div id="intro" class="p-4 " style="background-color: #011b35;">
+            <div class="d-flex justify-content-start mx-auto text-left mb-4" style="width: 50%;">
+                <i class="fab fa-wpexplorer fa-3x mr-3"  style="color:#DDDDDD;">
+                </i>
+                <p>Explore discovered exoplanets over the years.
+                </p>
             </div>
-            <div class="row text-left">
-              <div class="col-3">
-              </div>
-              <div class="col-6">
-                <h3>Compare exoplanet discovery methods over time
-                </h3>
-              </div>
-              <div class="col-3">
-              </div>
+            <div class="d-flex justify-content-start mx-auto text-left mb-4" style="width: 50%;">
+              <i class="far fa-chart-bar fa-3x mr-3" style="color:#DDDDDD;">
+              </i>
+              <p>Compare exoplanet discovery methods over the time.
+              </p>
             </div>
-            <div class="row text-left">
-              <div class="col-3">
-              </div>
-              <div class="col-6">
-                <h3>Understand the topology of our galaxy in terms of discovered exoplanets
-                </h3>
-                <!--h3>Compare the size of an exoplanet against distance from Earth to moon/mars/pluto
-                </h3-->
-              </div>
-              <div class="col-3">
-              </div>
+            <div class="d-flex justify-content-start mx-auto text-left mb-4" style="width: 50%;">
+              <i class="fab fa-wpexplorer fa-3x mr-3" style="color:#DDDDDD;">
+              </i>
+              <p>Understand the topology of our galaxy in terms of discovered exoplanets.
+              </p>
             </div>
-            <div class="row text-right">
-              <div class="col-3">
-              </div>
-              <div class="col-6">
-                <h3>Look for a specific exoplanet with detailed information
-                </h3>
-              </div>
-              <div class="col-3">
-              </div>
+            <div class="d-flex justify-content-start mx-auto text-left mb-4" style="width: 50%;">
+              <i class="fas fa-info-circle fa-3x mr-3" style="color:#DDDDDD;">
+              </i>
+              <p>Look for a specific exoplanet with detailed information.
+              </p>
             </div>
-            <a href="./vis1.html" class="btn btn-primary animation-on-hover mt-2">Explore</a>
           </div>
+          <a href="./vis1.html" class="btn btn-success animation-on-hover mt-4">Explore</a>
+
         </div>
       </div>
       <footer class="footer">

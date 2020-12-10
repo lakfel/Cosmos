@@ -15,7 +15,6 @@
 -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -31,7 +30,7 @@
   <link href="./assets/css/nucleo-icons.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link href="./assets/css/black-dashboard.css?v=1.0.0" rel="stylesheet" />
-
+  <link href="./assets/css/cosmos.css" rel="stylesheet" />
   <!-- d3 links -->
   <script src="./assets/js/core/jquery.min.js"></script>
   <!--script src="assets/js/core/jquery.min.js"></script-->
@@ -41,79 +40,35 @@
   <script src="./assets/js/d3v5.js"></script>
   <script src="./assets/js/cosmos.js"></script>
   <script src="./assets/js/nply.js"></script>
-
-<style>
-  p{
-    font-size: 14px;
-  }
-
-
-      .vis-card {
-        font-family: poppins;
-        font-weight: 300;
-        width: 200px;
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-        border-radius: 20px;
-        padding: 15px;
-        max-width: 400px;
-        min-height: 130px;
-        margin: 20px 10px;
-        background-color: white; 
-        color: black;
-      }
-      .vis-card h2, .vis-card h3 {
-        color: #DD45C3;
-      }
-      .vis-name {
-        border-bottom: 1px solid;
-        padding: 5px;
-        text-align: center;
-      }
-
-      .vis-card-body{
-        /* line-height: 12px; */
-        font-size: 16px;
-        text-align: center;
-        color: black;
-      }
-
-      .vis-card p{
-        color: black;
-        font-size: 16px;
-        line-height: 16px;
-      }
-
-</style>
 </head>
 
 <body class="">
   <div class="container-fluid">
     <!-- nav -->
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg bg-dark" style="background-color: #1a1e34; font-size: 16px;">
       <a class="navbar-brand font-weight-bold" href="./index.html">SI</a>
       <div class="container">
-        <!-- <a class="navbar-brand" href="#">Navbar</a> -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-bar navbar-kebab" ></span>
         <span class="navbar-toggler-bar navbar-kebab"></span>
         <span class="navbar-toggler-bar navbar-kebab"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav" >
-          <ul class="navbar-nav" style="background-color: black; font-size: 16px;">
+          <ul class="navbar-nav" >
             <li class="nav-item active">
-              <a class="nav-link" href="./index.html">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="./index.html" style="color: white !important;">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./vis1.html">Facts</a>
+              <a class="nav-link" href="./vis1.html" style="color: white !important;">Facts</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./vis2.html">Distance</a>
+              <a class="nav-link" href="./vis2.html" style="color: white !important;">Distance</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link " href="./pages/vis3.html">Systems</a>
+              <a class="nav-link " href="./pages/vis3.html" style="color: white !important;">Systems</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link " href="./pages/info.html">Discoveries</a>
+              <a class="nav-link " href="./pages/info.html" style="color: white !important;">Discoveries</a>
             </li>
           </ul>
         </div>
@@ -121,15 +76,75 @@
     </nav>
     <!-- end of nav -->
     <div class="main-panel ">
+      <!--full width Modal -->
+      <div class="modal fade modal-black" id="exampleModalPreview" tabindex="-1" role="dialog" aria-labelledby="exampleModalPreviewLabel" aria-hidden="true">
+        <div class="modal-dialog-full-width modal-dialog momodel modal-fluid" role="document">
+            <div class="modal-content-full-width modal-content ">
+                <div class=" modal-header text-center">
+                    <h3 class="modal-title w-100" id="exampleModalPreviewLabel">Cosmos Map</h3>
+                    <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                  <div class="">
+                    <!-- cosmos map -->
+                    <div class="card-body">
+                      <svg id="SvgScatter">
+                      </svg>
+                    </div>
+                    <!-- end of cosmos map -->
+                    <!-- animate button -->
+                    <div class="row justify-content-center ">
+                      <a id ="btnPlay"  class="btn btn-primary" onclick="animation()" role="button"><b>Animate</b></a>
+                    </div>
+                    <!-- end of animate button -->
+
+                    <!-- planets info card-->
+                    <div class="vis-card" id = "infoCardScatter" style ="overflow-y: auto;position:absolute; opacity:1;  top: 15%; left: 15%; visibility:hidden; width:50%;height:50%;max-width:600px">
+                      <button type="button" onclick="closeTooltipPlanet()" class="close" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                      <div>
+                        <h2 class="vis-name" id = 'lblPlanetName' style='text-align:center;'>PLANET NAME</h2>
+                      </div>
+                      <div class="vis-card-body">
+                        <div>
+                          <h3 class="mb-2">Planet</h3>
+                          <p id = 'txtPlanetSize'>description</p>
+                          <p id = 'txtPlanetMass'>description</p>
+                        </div>
+                        <div>
+                          <h3 class="mb-2">Planetary System</h3>
+                          <p id = 'txtDistanceSystem'>distant</p>
+                          <p id = 'txtHostStar'>description</p>
+                          <p id = 'txtNumberorPlanets'>description</p>
+                          <p id = 'txtStarSize'>description</p>
+                          <p id = 'txtStarMass'>description</p>
+                        </div>
+                        <div>
+                          <h3 class="mb-2">Discovery</h3>
+                          <p id = 'txtDateDiscovery'>description</p>
+                          <p id = 'txtMethodDiscovery'>description</p>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- end of planets info card -->
+
+                  </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-simple" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+      </div>
+      <!-- end full width Modal -->
       <div class="">
         <div class ="row d-flex flex-row-reverse">
-          <div class="col-lg-2 col-md-12 col-md-12">
-            <!-- <div class="card" >
-              <div class="card-body ">
-                  <a class="btn btn-primary" onclick="animation()" role="button">go</a>
-              </div>
-            </div> -->
-            <div class="card">
+          <!-- right column -->
+          <div class="col-lg-2 col-md-12 col-sm-12 ">
+            <div class="card mt-3">
               <h4 class="card-title">Exoplanet Exploration </h4>
               <div class="embed-responsive embed-responsive-16by9">
                 <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/WkWsJWOWTBE" allowfullscreen></iframe>
@@ -138,41 +153,79 @@
                 <h4 class="card-title">5 Ways to Find a Planet</h4>
                 <p class="card-text">
                   To find a planet, scientists need to get data from telescopes, 
-                  whether those telescopes are in space or on the ground. 
-                  But telescopes don't capture photos of planets with nametags. 
-                  Instead, ...
+                  whether those telescopes are in space or on the ground ...
                 </p>
                 <a href="https://exoplanets.nasa.gov/alien-worlds/ways-to-find-a-planet/" class="btn btn-primary" target="_blank">More Information</a>
               </div>
             </div>
           </div>
-          <div class="col-lg-10 col-md-12 col-md-12">
-			 
+          <!-- end of right column -->
+          <!-- left side main three vis -->
+          <div class="col-lg-10 col-md-12 col-sm-12">
             <div class=" row">
               <div class="col-lg-6 col-md-12 col-sm-12">
                 <!-- left vis -->
                 <div class="card" style="min-height:90vh;" id="area">
                   <div class="card-header ">
+                    <div class="row justify-content-between">
                       <div class="col-sm-6 text-left">
                         <h2 class="card-title">Cosmos Map</h2>
                       </div>
-						
+                      <div class="col-md-auto">                     
+                      </div>
+                      <div class="col-sm-6 col col-lg-3 ">
+                        <!-- Hints button -->
+                        <button type="button" class="btn btn-primary btn-link" data-toggle="modal" data-target="#exampleModal">
+                          Hints
+                        </button>
+                        <!-- end of Hits button -->
+
+                        <!-- Button to view full width modal -->
+                        <button id="modalActivate" type="button" class="btn btn-primary btn-link" data-toggle="modal" data-target="#exampleModalPreview">
+                          <i class="fas fa-expand fa-2x"></i>
+                        </button>
+                        <!-- end Button of full width modal  -->
+
+                        <!-- Hints Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title" id="exampleModalLabel">Hints to guide you with the visualizations</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                  <i class="tim-icons icon-simple-remove"></i>
+                                </button>
+                              </div>
+                              <div class="modal-body" >
+                                <ul class="hints" >
+                                  <li class="hints" >Click on each planet to learn about the planet's properties.</li>
+                                  <li class="hints" >Each planet is colored with its discovery method in the racing chart on the right. </li>
+                                  <li class="hints" >Press animate to view timeline animation of discovered exoplanets over the years. </li>
+                                  <li class="hints">To learn more, the right column of the page has external links for much exciting information about the discovered exoplanets.</li>
+                                  <li class="hints">Move the timeline slider to view the discovered planets between the selected years.</li>
+                                  <li class="hints">To view Cosmos Map in full width, click expand icon.</li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- end of hints modal -->
+                      </div>
+                    </div>
                   </div>
+                  <!-- cosmos map -->
                   <div class="card-body">
-                    <!-- vis 1 contents -->
                       <svg id="SvgScatter">
                       </svg>
-                      <!-- end of vis1 content -->
                   </div>
-
+                  <!-- end of cosmos map -->
+                  <!-- animate button -->
                   <div class="row pl-5 pb-5 mx-auto ">
-						<a style = "width:100%" id ="btnPlay"  class="btn btn-neutral" onclick="animation()" role="button"><b>Animate</b></a>
-					
-                    <!--a style = "width:80%" id ="btnStop" class="btn btn-warning" onclick="animationStop()" role="button"><b>Stop</b></a-->
-                    <!-- <a class="btn btn-primary btn-simple" onclick="animation()" role="button">Stop</a> -->
+						        <a style = "width:100%" id ="btnPlay"  class="btn btn-neutral" onclick="animation()" role="button"><b>Animate</b></a>
                   </div>
+                  <!-- end of animate button -->
                 </div>
-                <!-- info card -->
+                <!-- planets info card-->
                 <div class="vis-card" id = "infoCardScatter" style ="overflow-y: auto;position:absolute; opacity:1;  top: 15%; left: 15%; visibility:hidden; width:50%;height:50%;max-width:600px">
                   <button type="button" onclick="closeTooltipPlanet()" class="close" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -199,16 +252,14 @@
                       <p id = 'txtDateDiscovery'>description</p>
                       <p id = 'txtMethodDiscovery'>description</p>
                     </div>
-                    <!-- <a class="btn btn-primary" onclick="closeTooltipPlanet()" role="button">Close</a> -->
                   </div>
                 </div>
-                <!-- end of info card -->
-
-                <!--end of left vis-->
+                <!-- end of planets info card -->
               </div>
+              <!--end of left vis-->
               <div class="col-lg-6 col-md-12 col-sm-12">
+                <!-- vis upper right --> 
                 <div class="row">
-                  <!-- vis upper right --> 
                   <div class="card mb-3" style="min-height:45vh;">
                     <div class="card-header ">
                       <h6 class="title d-inline">Discovery Methods</h6>
@@ -221,9 +272,6 @@
                   </div>
                   <!-- method card -->
                   <div class="vis-card" id = "infoCardBars" style ="z-index:100; overflow-y: auto;position:absolute; opacity:1; top:0px; left:0px; visibility:hidden; width:60%;max-width:600px">
-                    <div>
-                      <!-- <button type="button" onclick="closeTooltipPlanet()" class="close" aria-label="Close" > -->
-                    </div>
                     <div>
                       <h3 class="vis-name text-center" id = 'lblMethodName'>Discovery Method</h3>
                     </div>
@@ -240,8 +288,8 @@
                   <!-- end of method card -->
                 </div>
                 <!-- end of vis upper right-->
-                <div class="row">
                 <!-- vis lower right --> 
+                <div class="row">
                 <div class="card mb-3" style="min-height:45vh;">
                   <div class="card-header ">
                     <h6 class="title d-inline">History of exoplanets discovering</h6>
@@ -252,14 +300,17 @@
                     </div>
                   </div>
                 </div>
-                <!-- end of vis lower right --> 
+                 
 
                 </div>
+                <!-- end of vis lower right -->
               </div>
             </div>
           </div>
+          <!-- end of left side main three vis  -->
         </div>
       </div>
+      
       
       <footer class="footer">
         <div class="container-fluid">
@@ -405,7 +456,12 @@
         application: "black-dashboard-free"
       });
   </script>
-
+<!-- modal -->
+<script>
+  $(function () {
+$('[data-toggle="popover"]').popover()
+})
+</script>
 	
 </body>
 

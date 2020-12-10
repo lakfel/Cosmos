@@ -31,15 +31,14 @@
   <link href="./assets/css/nucleo-icons.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link href="./assets/css/black-dashboard.css?v=1.0.0" rel="stylesheet" />
+  <link href="./assets/css/cosmos.css" rel="stylesheet" />
+
 
   <!-- d3 links -->
   <script src="https://d3js.org/d3.v3.min.js"></script>
   <script src="./assets/js/cosmos_jacob.js"></script>
 
 <style>
-  p{
-    font-size: 14px;
-  }
 
 .axis path,
 .axis line {
@@ -85,17 +84,13 @@
         text-align: center;
       }
 
-.nameLine
-{
-
-}
 </style>
 </head>
 
 <body class="">
   <div class="container-fluid">
     <!-- nav -->
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg bg-dark" style="background-color: #1a1e34; font-size: 16px;">
       <a class="navbar-brand font-weight-bold" href="./index.html">SI</a>
       <div class="container">
         <!-- <a class="navbar-brand" href="#">Navbar</a> -->
@@ -105,21 +100,21 @@
         <span class="navbar-toggler-bar navbar-kebab"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav" >
-          <ul class="navbar-nav" style="background-color: black; font-size: 16px;">
+          <ul class="navbar-nav" >
             <li class="nav-item active">
-              <a class="nav-link" href="./index.html">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="./index.html" style="color: white !important;">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./vis1.html">Facts</a>
+              <a class="nav-link" href="./vis1.html" style="color: white !important;">Facts</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./vis2.html">Distance</a>
+              <a class="nav-link" href="./vis2.html" style="color: white !important;">Distance</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link " href="./pages/vis3.html">Systems</a>
+              <a class="nav-link " href="./pages/vis3.html" style="color: white !important;">Systems</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link " href="./pages/info.html">Discoveries</a>
+              <a class="nav-link " href="./pages/info.html" style="color: white !important;">Discoveries</a>
             </li>
           </ul>
         </div>
@@ -130,8 +125,12 @@
     <div class="main-panel ">
       <div class="wrapper">
         <div class ="row d-flex flex-row-reverse">
+          <!-- right column -->
           <div class="col-lg-2 col-md-12 col-md-12">
-            <div class="card" >
+            <div class="card mt-3" >
+              <div class="card-title">
+                <h4>Filter by solar systems</h4>
+              </div>
               <div class="card-body ">
                 <form>
                   <div class="form-group">
@@ -145,22 +144,20 @@
               </div>
             </div>
             <div class="card">
-              <h4 class="card-title">Exoplanet Exploration </h4>
+              <h4 class="card-title">Planets Beyond Our Solar System </h4>
               <div class="embed-responsive embed-responsive-16by9">
-                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/WkWsJWOWTBE" allowfullscreen></iframe>
+                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/wO_N3X-bZWs" allowfullscreen></iframe>
               </div>
               <div class="card-body  pr-5">
-                <h4 class="card-title">5 Ways to Find a Planet</h4>
+                <h4 class="card-title">Strange New Worlds</h4>
                 <p class="card-text">
-                  To find a planet, scientists need to get data from telescopes, 
-                  whether those telescopes are in space or on the ground. 
-                  But telescopes don't capture photos of planets with nametags. 
-                  Instead, ...
+                  Kepler-16b, Kepler-22b, Kepler-7b, Kepler-452 b  ...
                 </p>
-                <a href="https://exoplanets.nasa.gov/alien-worlds/ways-to-find-a-planet/" class="btn btn-primary" target="_blank">More Information</a>
+                <a href="https://exoplanets.nasa.gov/alien-worlds/strange-new-worlds/" class="btn btn-primary" target="_blank">More Information</a>
               </div>
             </div>
           </div>
+          <!-- end of right column -->
           <div class="col-lg-10 col-md-12 col-md-12">
             <div class=" row">
                  <!--  vis -->
@@ -170,7 +167,10 @@
                         <h2 class="card-title">Distance between Earth and Moon</h2>
                       </div>
                       <div class="col-sm-6">
-                          <p class="card-title">What other solar system's planets would fit between Earth and the Moon? Green dot is Earth and the black is our Moon</p>
+                          <h4 class="">What other solar system's planets would fit between Earth and the Moon? </h4>
+                          <h4 class="" style="color:yellow;">
+                            Green dot is Earth and the black is our Moon
+                          </h4>
                       </div>
                   </div>
                   <div class="card-body">
@@ -184,7 +184,6 @@
                   </div>
                 </div>
                 <!--end of  vis-->
-
             </div>
           </div>
         </div>
