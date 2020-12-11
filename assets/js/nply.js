@@ -284,11 +284,11 @@
 		let dots = svgScatter.selectAll('.dot');
 
 		svgScatter.select('.xAxisScatter')
-			.attr("transform", "translate(0," + yScaleScatter(0) + ")")
+			.attr("transform", "translate(0," + yScaleScatter(d3.min([d3.max([0,limitsScatter.minY]),limitsScatter.maxY])) + ")")
 			.call(xAxisScatter);
 			
 		svgScatter.select('.yAxisScatter')
-			.attr("transform", "translate(" + xScaleScatter(0) + ",0)")
+			.attr("transform", "translate(" +  xScaleScatter(d3.min([d3.max([0,limitsScatter.minX]),limitsScatter.maxX])) + ",0)")
 			.call(yAxisScatter);
 		dots			
 			.attr("cx", xMap)
@@ -652,7 +652,6 @@
 						.attr('x',xSScale(0))
 						.attr('y',ySScale(0))
 						.text('')
-						.style('opacity', d3.min([7/middleInterval,1]))
 						.style('visibility','hidden');
 					rectangleHint
 						.transition()
@@ -885,6 +884,7 @@
 				.style('fill', 'white')
 				.style('text-anchor', 'start')
 				.html(d => d.method + '(' + d.value + ')')
+				.style('font-size','10px')
 				.on('mouseover', handleMouseOverBar)
 				.on('mouseout', handleMouseOutBar)
 				.transition()
@@ -897,6 +897,7 @@
 			{
 				labels
 					.html(d => d.method + '(' + d.value + ')')
+					.style('font-size','10px')
 					.transition()
 					.duration(tickDuration)
 						.ease(d3.easeLinear)
@@ -906,7 +907,8 @@
 			else
 			{
 				labels
-					.html(d => d.method + '(' + d.value + ')')				
+					.html(d => d.method + '(' + d.value + ')')		
+					.style('font-size','10px')		
 					.attr('x', d => xScaleBars(d.value))
 					.attr('y', d => yScaleBars(d.rank)+5+((yScaleBars(1)-yScaleBars(0))/2)+1);
 				
@@ -1275,6 +1277,7 @@
 			.attr('x', d => xScaleBars(d.value))
 			.attr('y', d => yScaleBars(d.rank)+5+((yScaleBars(1)-yScaleBars(0))/2)+1)
 			.style('text-anchor', 'start')
+			.style('font-size','10px')
 			.style('fill', 'white')
 			.html(d => d.method + '(' + d.value + ')')
 			.on('mouseover', handleMouseOverBar)
