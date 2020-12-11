@@ -15,7 +15,7 @@
 	// ------ Scatter data
 	var dataScatter;
 	// Margins and sizes
-	var marginScatter = {top: 35, right: 20, bottom: 50, left: 20},
+	var marginScatter = {top: 20, right: 20, bottom: 20, left: 20},
     widthScatter = 500 - marginScatter.left - marginScatter.right,
     heightScatter = 400- marginScatter.top - marginScatter.bottom;
 	
@@ -42,7 +42,7 @@
 	// Math.log10 can be applied if a cleaner scale is required
 	var yValueScatter = function(d,i) { return -d.sy_dist*Math.sin(d.ra*Math.PI/180) * Math.cos(d.dec*Math.PI / 180 - Math.PI/4);},
 	//Y Scale map for scatter
-		yScaleScatter = d3.scaleLinear().range([heightScatter, 0]),
+		yScaleScatter = d3.scaleLinear().range([heightScatter - 10, 0]),
 		// Applies the x value to the scatter
 		yMap = function(d,i) {
 				return yScaleScatter(yValueScatter(d));},// data -> display
@@ -67,16 +67,19 @@
 		//svgParent.remove();
 		//modalParent.append(svgParent.node());
 		$("#infoCardScatter").appendTo("#modalView")
-
+		var ratio = screen.height/heightScatter ;
 		$("#SvgScatter").appendTo("#modalView")
 		svgParent
 			//.attr("width", widthScatter + marginScatter.left + marginScatter.right)
 			//.attr("height", heightScatter + marginScatter.top + marginScatter.bottom) 
-			.attr('width', '95%')
-			.attr('height', '95%')
-			.attr('viewBox','0 0 '+ screen.width*0.6 +' '+screen.height*0.6)
+			.attr('width',  (95)/ratio +  '%')
+			.attr('height', (95)/ratio +  '%')
+			.attr('preserveAspectRatio','none')
+			.attr('viewBox','0 0 '+ widthScatter +' '+heightScatter)
+		//svgScatter
+			.attr("transform", "translate(" + (screen.height/2 + marginScatter.left - widthScatter/2 ) + "," + marginScatter.top + ")");
 			//.attr('viewBox','0 0 '+Math.min(widthScatter,heightScatter)+' '+Math.min(widthScatter,heightScatter))
-			//.attr('viewBox','0 0 '+ widthScatter +' '+ heightScatter )
+		//	.attr('viewBox','0 0 '+ widthScatter +' '+ heightScatter )
 		//	.attr('viewBox','0 0 '+ widthScatter +' '+heightScatter)
 			//.attr('preserveAspectRatio','xMidYMid meet')
 	}
@@ -87,14 +90,17 @@
 		$("#infoCardScatter").appendTo("#normalView")
 		$("#SvgScatter").appendTo("#normalView")
 		svgParent
-			.attr('viewBox','0 0 '+ screen.width*0.4 +' '+screen.height*0.4);
-		/*	//.attr("width", widthScatter + marginScatter.left + marginScatter.right)
+			//.attr('viewBox','0 0 '+ screen.width*0.4 +' '+screen.height*0.4);
+			//.attr("width", widthScatter + marginScatter.left + marginScatter.right)
 			//.attr("height", heightScatter + marginScatter.top + marginScatter.bottom) 
 			.attr('width', '95%')
 			.attr('height', '95%')
+			.attr('preserveAspectRatio','xMinYMin meet')
 			//.attr('viewBox','0 0 '+Math.min(widthScatter,heightScatter)+' '+Math.min(widthScatter,heightScatter))
 			//.attr('viewBox','0 0 '+ widthScatter +' '+ heightScatter )
-			.attr('viewBox','0 0 '+ widthScatter +' '+heightScatter)*/
+			.attr('viewBox','0 0 '+ widthScatter +' '+heightScatter)
+		//svgScatter
+			.attr("transform", "");
 	}
 	
 	//----------- Load data and initial VIZ
@@ -107,13 +113,13 @@
 		svgParent = d3.select("#SvgScatter")
 			//.attr("width", widthScatter + marginScatter.left + marginScatter.right)
 			//.attr("height", heightScatter + marginScatter.top + marginScatter.bottom) 
-			.attr('width', '95%')
-			.attr('height', '95%')
+			.attr('width', '100%')
+			.attr('height', '100%')
 			//.attr('viewBox','0 0 '+Math.min(widthScatter,heightScatter)+' '+Math.min(widthScatter,heightScatter))
 			//.attr('viewBox','0 0 '+ widthScatter +' '+ heightScatter )
-			//.attr('viewBox','0 0 '+ widthScatter +' '+heightScatter)
+			.attr('viewBox','0 0 '+ widthScatter +' '+heightScatter)
 
-			.attr('viewBox','0 0 '+ screen.width*0.4 +' '+screen.height*0.4)
+			//.attr('viewBox','0 0 '+ screen.width*0.4 +' '+screen.height*0.4)
 			.attr('preserveAspectRatio','xMinYMin meet')
 			//.attr('max-height','100px')
 			.on("wheel", onWheel)
@@ -125,7 +131,7 @@
 			//.attr('transform', 'translate(' + Math.min(widthScatter,heightScatter) / 2 + ','+ Math.min(widthScatter,heightScatter) / 2 + ')')
 			.attr("transform", "translate(" + marginScatter.left + "," + marginScatter.top + ")");
 			
-		yScaleScatter.range([heightScatter - marginScatter.top - marginScatter.bottom , 0]);
+		yScaleScatter.range([heightScatter - marginScatter.top - marginScatter.bottom -10, 0]);
 		yAxisScatter.scale(yScaleScatter);
 		xScaleScatter.range([0, widthScatter - marginScatter.left - marginScatter.right]);
 		// change string (from CSV) into number format
@@ -162,12 +168,12 @@
 		filterText2 = svgScatter.append('text')
 		  .attr('class', 'yearText')
 		  .style('fill', 'white')
-		  .style('font-size', 20)
+		  .style('font-size', 15)
 		  .style('background', 'black')
 		  .attr('x', 0)
-		  .attr('y',  0 )
+		  .attr('y',  0)
 		  .style('text-anchor', 'start')
-		  .html('-');
+		  .html('2020').raise();
 
 		
 		limitsScatter.minX = d3.min(dataScatter, xValueScatter);
@@ -257,7 +263,7 @@
 		
 		 xSScale = d3.scaleLinear().range([0,widthScatter - marginScatter.left - marginScatter.right]);
 		 rSScale = d3.scaleLinear().range([0,heightScatter]);
-		 ySScale = d3.scaleLinear().range([heightScatter - marginScatter.top - marginScatter.bottom , 0]);
+		 ySScale = d3.scaleLinear().range([heightScatter - marginScatter.top - marginScatter.bottom - 10 , 0]);
 		 xSScale.domain([-60,60]);
 		 rSScale.domain([0,8000]);
 		 ySScale.domain([-60,60]);
@@ -360,9 +366,11 @@
 			.style('visibility', 'hidden');
 			
 		svgScatter.append('text')
-			.attr('x', xScaleScatter(limitsScatter.maxX))
-			.attr('y', yScaleScatter(limitsScatter.minY))
-			.attr("dy", "2em")
+			//.attr('x', xScaleScatter(limitsScatter.maxX))
+			//.attr('y', yScaleScatter(limitsScatter.minY))
+			.attr('x', widthScatter - marginScatter.left)
+			.attr('y',heightScatter - marginScatter.top)
+			.attr("dy", "-2em")
 			.style("fill", "white")
 			.style("text-anchor", "end")
 			.text('lost in the cosmos?')
@@ -370,9 +378,11 @@
 			.on('mouseover',showHelp)
 			.on('mouseout',hideHelp)
 		svgScatter.append('text')
-			.attr('x', xScaleScatter(limitsScatter.maxX))
-			.attr('y', yScaleScatter(limitsScatter.minY))
-			.attr("dy", "3em")
+			//.attr('x', xScaleScatter(limitsScatter.maxX))
+			//.attr('y', yScaleScatter(limitsScatter.minY))
+			.attr('x', widthScatter - marginScatter.left)
+			.attr('y',heightScatter - marginScatter.top)
+			.attr("dy", "-1em")
 			.style("fill", "white")
 			.style("text-anchor", "end")
 			.text(' Move your mouse here')
