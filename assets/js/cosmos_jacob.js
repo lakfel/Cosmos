@@ -4,6 +4,8 @@ var HOSTNAME = "HostName Unselected"
 var circle;
 var planetText;
 var line;
+var scaleLine;
+var description;
 
 var planetData;
 
@@ -135,7 +137,7 @@ d3.csv("./data/data.csv", function (error, data) {
       totalDistance += currentDistance;
       //console.log("planets length: " + currentDistance);
       //console.log("ALL planets length: " + totalDistance);
-      return 'translate(' + (totalDistance - currentDistance / 2) + ', 100)';})
+      return 'translate(' + (totalDistance - currentDistance / 2) + ', 120)';})
       .style("visibility", "visible");
 
   var circle2 = svg
@@ -151,7 +153,7 @@ d3.csv("./data/data.csv", function (error, data) {
       // totalDistance += currentDistance;
       // console.log("planets length: " + currentDistance);
       // console.log("ALL planets length: " + totalDistance);
-      return 'translate(' + 0 + ', 100)';})
+      return 'translate(' + 0 + ', 120)';})
       .style("fill", "#008000");
 
   var circle3 = svg
@@ -167,7 +169,7 @@ d3.csv("./data/data.csv", function (error, data) {
       // totalDistance += currentDistance;
       // console.log("planets length: " + currentDistance);
       // console.log("ALL planets length: " + totalDistance);
-      return 'translate(' + distanceFromEToM + ', 100)';
+      return 'translate(' + distanceFromEToM + ', 120)';
     })
     .style("fill", "#000");
 
@@ -222,8 +224,69 @@ d3.csv("./data/data.csv", function (error, data) {
       //return 'translate(' + (totalDistance - currentDistance / 2) + ', '+ '100)';})
       .style("visibility", "visible");
 
+      scaleLine = svg
+      .selectAll(".lineNameScale")
+      .data(planetData)
+      .enter()
+      .append('line')
+      .filter(function(d){return(d.pl_name == "55 Cnc b");})
+      .attr("class", "lineNameScale")
+      .style("stroke", "red")
+      .style("stroke-width", 2)
+      .style("background","black")
+      .attr("x1", 0)
+      .attr("x2", distanceFromEToM)
+      .attr("y1", -6)
+      .attr("y2", -6);
+
+      description = svg
+      .selectAll(".lengthDescription")
+      .data(planetData)
+      .enter()
+      .append("text")
+      .filter(function(d){return(d.pl_name == "55 Cnc b");})
+      .attr("class", "lengthDescription")
+      .text("Earth -----------------(405,696 km)----------------- Moon")
+      .style("fill", "#FFFFFF")
+      //.style("text-anchor", "middle")
+      .style("visibility", "visible")
+      .style("font", "12px times")
+      .attr('transform', function (d, i) {
+        return 'translate(3, -10)';
+      });
 
      
+
+      scaleLine = svg
+      .selectAll(".lineNameScaleEarth")
+      .data(planetData)
+      .enter()
+      .append('line')
+      .filter(function(d){return(d.pl_name == "55 Cnc b");})
+      .attr("class", "lineNameScaleEarth")
+      .style("stroke", "white")
+      .style("stroke-width", 2)
+      .style("background","black")
+      .attr("x1", 0)
+      .attr("x2", 0)
+      .attr("y1", -15)
+      .attr("y2", 40);
+
+      scaleLine = svg
+      .selectAll(".lineNameScaleMoon")
+      .data(planetData)
+      .enter()
+      .append('line')
+      .filter(function(d){return(d.pl_name == "55 Cnc b");})
+      .attr("class", "lineNameScaleMoon")
+      .style("stroke", "white")
+      .style("stroke-width", 2)
+      .style("background","black")
+      .attr("x1", distanceFromEToM)
+      .attr("x2", distanceFromEToM)
+      .attr("y1", -15)
+      .attr("y2", 40);
+
       line = svg
       .selectAll(".nameLine")
       .data(planetData)
@@ -233,6 +296,7 @@ d3.csv("./data/data.csv", function (error, data) {
       .style("stroke", "white")
       .style("stroke-width", 1)
       .style("background","black");
+
 
       currentDistance = sizeOfEarth;
       totalDistance = sizeOfEarth;
@@ -259,11 +323,11 @@ d3.csv("./data/data.csv", function (error, data) {
         {
           textCounter = 2;
         }
-        return 'translate(' + (totalDistance - currentDistance / 2) + ', '+ (250 + textCounter * 50) +')';})
+        return 'translate(' + (totalDistance - currentDistance / 2) + ', '+ (270 + textCounter * 50) +')';})
 
       .attr("x1", 0)
       .attr("x2", 0)
-      .attr("y1", -10);
+      .attr("y1", -20);
 
       textCounter = 0;
 
@@ -298,7 +362,7 @@ d3.csv("./data/data.csv", function (error, data) {
 
 var filterByHostName = function (d, i) {
 
-  console.log("button clicked"); // 
+  //console.log("button clicked"); // 
 
   var ddEl = document.getElementById("HostName");
   HOSTNAME = ddEl.options[ddEl.selectedIndex].text;
@@ -350,7 +414,7 @@ var filterByHostName = function (d, i) {
     .attr('transform',function(d,i){
       currentDistance = (parseInt(radius(d))*sizeOfEarth * 2);
       totalDistance += currentDistance;
-      console.log("TEXT");
+      //console.log("TEXT");
       //console.log("ALL planets length: " + totalDistance);
       if(textCounter == 2)
       {
