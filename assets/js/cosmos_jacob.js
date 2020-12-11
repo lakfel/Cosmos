@@ -77,8 +77,10 @@ d3.csv("./data/data.csv", function (error, data) {
     var option = document.createElement("option");
     option.text = namesOfSystems[index];
     option.value = namesOfSystems[index];
+    option.style["background-color"] =  "#343a40";
     var select = document.getElementById("HostName");
     select.appendChild(option);
+
 
   }
 
@@ -95,39 +97,13 @@ d3.csv("./data/data.csv", function (error, data) {
 
   //PUT A FILTER ON DATA FOR SOLARSYSTEM
   //PUT A FILTER ON DATA FOR SIZE OF PLANET
-
- // xScale.domain([-d3.max(data, xValue)-1, d3.max(data, xValue)+1]);
-  // x.domain([-d3.max(data, xValue)-1, d3.max(data, xValue)+1]);
-  // y.domain([0]);
-
-  //dataScatter.sort((a,b) => a.qym - b.qym);
-  // data.forEach(function(d) {
-  //   if(d.qym != lastQyM)
-  //   {
-  //    // countInQYm = 0;
-  //     //lastQyM = d.qym;
-  //   }
-  //   //countInQYm += 1;
-  //   //d.filterTime = countInQYm;
-  //   });
-  //var 
-
-
-
   circle = svg
         .selectAll(".p_circle")
         .data(planetData)
         .enter()
         .append("circle")
-        //.filter(function(d){return(d.hostname == "55 Cnc");})//change to host name variable "55 Cnc"
         .attr("class", "p_circle")
         .attr('r', function(d){return(parseInt(radius(d))*sizeOfEarth);})
-        /*.attr('transform',function(d,i){
-          currentDistance = (parseInt(radius(d))*sizeOfEarth * 2);
-          totalDistance += currentDistance;
-          console.log("planets length: " + currentDistance);
-          console.log("ALL planets length: " + totalDistance);
-          return 'translate(' + (totalDistance - currentDistance / 2) + ', 100)';})*/
         .style("fill", "#2165CE")
         .style("visibility", "hidden");
     circle
@@ -393,7 +369,7 @@ var filterByHostName = function (d, i) {
       //console.log("Number of planets in solar system: " + d.sy_pnum);
       //console.log("planets length: " + currentDistance);
       //console.log("ALL planets length: " + totalDistance);
-      return 'translate(' + (totalDistance - currentDistance / 2) + ', 100)';})
+      return 'translate(' + (totalDistance - currentDistance / 2) + ', 120)';})
     .style("fill", "#2165CE")
     .style("visibility", "visible");
 
@@ -428,6 +404,7 @@ var filterByHostName = function (d, i) {
       {
         textCounter = 2;
       }
+
       return 'translate(' + (totalDistance - currentDistance / 2) + ', '+ (220 + textCounter * 50) +')';})
       //return 'translate(' + (totalDistance - currentDistance / 2) + ', '+ '100)';})
       .style("visibility", "visible")
