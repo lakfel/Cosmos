@@ -652,7 +652,6 @@
 						.attr('x',xSScale(0))
 						.attr('y',ySScale(0))
 						.text('')
-						.style('opacity', d3.min([7/middleInterval,1]))
 						.style('visibility','hidden');
 					rectangleHint
 						.transition()
