@@ -284,11 +284,11 @@
 		let dots = svgScatter.selectAll('.dot');
 
 		svgScatter.select('.xAxisScatter')
-			.attr("transform", "translate(0," + yScaleScatter(0) + ")")
+			.attr("transform", "translate(0," + yScaleScatter(d3.min([d3.max([0,limitsScatter.minY]),limitsScatter.maxY])) + ")")
 			.call(xAxisScatter);
 			
 		svgScatter.select('.yAxisScatter')
-			.attr("transform", "translate(" + xScaleScatter(0) + ",0)")
+			.attr("transform", "translate(" +  xScaleScatter(d3.min([d3.max([0,limitsScatter.minX]),limitsScatter.maxX])) + ",0)")
 			.call(yAxisScatter);
 		dots			
 			.attr("cx", xMap)
