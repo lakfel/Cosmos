@@ -405,7 +405,7 @@ var filterByHostName = function (d, i) {
         textCounter = 2;
       }
 
-      return 'translate(' + (totalDistance - currentDistance / 2) + ', '+ (220 + textCounter * 50) +')';})
+      return 'translate(' + (totalDistance - currentDistance / 2) + ', '+ (250 + textCounter * 50) +')';})
       //return 'translate(' + (totalDistance - currentDistance / 2) + ', '+ '100)';})
       .style("visibility", "visible")
 
@@ -434,7 +434,7 @@ var filterByHostName = function (d, i) {
         {
           textCounter = 2;
         }
-        return 'translate(' + (totalDistance - currentDistance / 2) + ', '+ (250 + textCounter * 50) +')';})
+        return 'translate(' + (totalDistance - currentDistance / 2) + ', '+ (280 + textCounter * 50) +')';})
 
       .attr("x1", 0)
       .attr("x2", 0)
